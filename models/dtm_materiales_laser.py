@@ -15,9 +15,15 @@ class MaterialesLasser(models.Model):
 
     #--------------------  Llena la tabla con las ordenes de servicio ----------------
 
+<<<<<<< HEAD
     def acction_less(self):
         get_cantidad = self.env["dtm.materiales"].browse(self.material_id)
         cantidad = get_cantidad.cantidad - int(self.sheets)
+=======
+    def acction_less(self):#----------------------- Borra los procesos ya realizados en la coratadora laser y en el modulo de diseño pasandolos a otra tabla donde se llevará el registro
+        # get_cantidad = self.env["dtm.materiales"].browse(self.material_id)
+        # cantidad = get_cantidad.cantidad - int(self.sheets)
+>>>>>>> a3ef8156c324f80ea25b553eb81ef8c9e6cc1839
 
         material = self.material
         calibre = self.calibre
@@ -27,27 +33,47 @@ class MaterialesLasser(models.Model):
         drawingname = self.drawingname
         material_id = str(self.material_id)
 
+<<<<<<< HEAD
         self.env.cr.execute("UPDATE dtm_materiales SET cantidad = "+str(cantidad)+" WHERE id = "+str(self.material_id))
 
         self.env.cr.execute("INSERT INTO dtm_laser_realizados (material, calibre, largo, ancho, sheets, drawingname, material_id)" +
                             "VALUES ('"+material+"', '"+calibre+"', '"+largo+"', '"+ancho+"', '"+sheets+"', '"+drawingname+"', "+material_id+");")
 
+=======
+        # Descuenta los materiales ya utilizados del stock
+        # self.env.cr.execute("UPDATE dtm_materiales SET cantidad = "+str(cantidad)+" WHERE id = "+str(self.material_id))
+        # Pasa la orden de pendientes a realizados en el modulo de dtm_materiales_laser
+        self.env.cr.execute("INSERT INTO dtm_laser_realizados (material, calibre, largo, ancho, sheets, drawingname, material_id)" +
+                            "VALUES ('"+material+"', '"+calibre+"', '"+largo+"', '"+ancho+"', '"+sheets+"', '"+drawingname+"', "+material_id+");")
+        # Retira las ordenes ya cortadas de Cortadora Laser
+>>>>>>> a3ef8156c324f80ea25b553eb81ef8c9e6cc1839
         self.env.cr.execute("DELETE FROM dtm_materiales_laser WHERE material_id = "+str(material_id))
 
         get_material = self.env['dtm.materiales'].search([("id","=",material_id)])
 
+<<<<<<< HEAD
         print(get_material)
 
+=======
+>>>>>>> a3ef8156c324f80ea25b553eb81ef8c9e6cc1839
         list_material =  '{} - CALIBRE: {} LARGO:  {} ANCHO: {} '.format(get_material.material_id.nombre,
                                                                          get_material.calibre_id.calibre,
                                                                          get_material.largo_id.largo,
                                                                          get_material.ancho_id.ancho)
 
+<<<<<<< HEAD
         print(list_material)
 
         self.env.cr.execute("INSERT INTO dtm_diseno_realizados (drawingname, sheets, material_id)" +
                             "VALUES ('"+drawingname+"', '"+sheets+"', '"+list_material+"');")
 
+=======
+        # print(list_material)
+        # Pasa la orden de pendientes a realizados en el modulo de dtm_diseno de Diseño a Realizados
+        self.env.cr.execute("INSERT INTO dtm_diseno_realizados (drawingname, sheets, material_id)" +
+                            "VALUES ('"+drawingname+"', '"+sheets+"', '"+list_material+"');")
+        # Retira las ordenes ya cortadas de Diseño
+>>>>>>> a3ef8156c324f80ea25b553eb81ef8c9e6cc1839
         self.env.cr.execute("DELETE FROM dtm_diseno WHERE drawingname = '"+drawingname+"'")
 
 
@@ -74,7 +100,11 @@ class MaterialesLasser(models.Model):
 
         return res
 
+<<<<<<< HEAD
 class Realizados(models.Model):
+=======
+class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
+>>>>>>> a3ef8156c324f80ea25b553eb81ef8c9e6cc1839
     _name = "dtm.laser.realizados"
     _description = "Lleva el listado de todo el material cortado en la Laser"
 

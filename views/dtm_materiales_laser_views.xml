@@ -17,16 +17,12 @@
                 </tree>
             </field>
         </record>
-
         <record id="dtm_materiales_laser_accion" model="ir.actions.act_window">
             <field name="name">Cortadora Laser</field>
             <field name="res_model">dtm.materiales.laser</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="dtm_materiales_laser_tree" />
         </record>
-
-
-
     </data>
 
 </odoo>
