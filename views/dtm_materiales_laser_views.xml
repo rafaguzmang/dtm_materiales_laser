@@ -3,7 +3,7 @@
 
     <data>
          <record id="dtm_materiales_laser_tree" model="ir.ui.view">
-            <field name="name">dtm_materiales_lase_tree</field>
+            <field name="name">dtm_materiales_laser_tree</field>
             <field name="model">dtm.materiales.laser</field>
             <field name="arch" type="xml">
                 <tree create="false">
