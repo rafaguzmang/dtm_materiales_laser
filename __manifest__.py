@@ -4,6 +4,7 @@
     'version': '1.0',
     'author': "Rafael Guzmán",
     "description": "Conteo de materiales de salida",
+    "depends":["dtm_odt"],
     "data":[        
         'security/ir.model.access.csv',
         'views/dtm_materiales_laser_views.xml',

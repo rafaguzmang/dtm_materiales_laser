@@ -1,10 +1,17 @@
 from odoo import api,models,fields
+from datetime import datetime
 
 
 class MaterialesLasser(models.Model):
     _name = "dtm.materiales.laser"
     _description = "Lleva el listado de los materiales a cortar en la laser"
 
+<<<<<<< HEAD
+    orden_trabajo = fields.Integer(string="Orden de Trabajo")
+    fecha_entrada = fields.Date(string="Fecha de antrada")
+    nombre_orden = fields.Char(string="Nombre")
+    cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
+=======
     material = fields.Char(string="MATERIAL", readonly=True)
     calibre = fields.Char(string="CALIBRE", readonly=True)
     largo = fields.Char(string="LARGO", readonly=True)
@@ -62,39 +69,54 @@ class MaterialesLasser(models.Model):
                             "VALUES ('"+drawingname+"', '"+sheets+"', '"+list_material+"');")
         # Retira las ordenes ya cortadas de Diseño
         self.env.cr.execute("DELETE FROM dtm_diseno WHERE drawingname = '"+drawingname+"'")
+>>>>>>> 08d5accf4ec8b4c17048ef97325a79f52aa4fae5
 
 
-
-    def get_view(self, view_id=None, view_type='form', **options):#-----------------Llena la tabla dtm_materiales_laser con los nesteos programados por diseño----------
-        res = super(MaterialesLasser,self).get_view(view_id, view_type)
-
-        get_info = self.env['dtm.diseno'].search([])
-        self.env.cr.execute("DELETE FROM dtm_materiales_laser ")
-        cont = 0;
-
-        for result in get_info:
-            print(result.material_id.id)
-            material = str(result.material_id.material_id.nombre)
-            calibre = str(result.material_id.calibre_id.calibre)
-            largo = str(result.material_id.largo_id.largo)
-            ancho = str(result.material_id.ancho_id.ancho)
-            sheets = str(result.sheets)
-            drawingname = str(result.drawingname)
-            material_id = str(result.material_id.id)
+    def action_terminado(self):
+        cont = 0
+        for corte in self.cortadora_id:
             cont += 1
-            self.env.cr.execute("INSERT INTO dtm_materiales_laser ( id, material, calibre, largo, ancho, sheets, drawingname, material_id) " +
-                                "VALUES("+str(cont)+",'"+material+"', '"+calibre+"','"+largo+"','"+ancho+"','"+sheets+"','"+drawingname+"', "+ material_id +")")
+            if not corte.cortado:
+                break
 
-        return res
+        if len(self.cortadora_id) == cont:
+            vals = {
+                "orden_trabajo": self.orden_trabajo,
+                "fecha_entrada": datetime.today(),
+                "nombre_orden": self.nombre_orden,
+            }
+
+            get_info = self.env['dtm.laser.realizados'].search([])
+            get_info.create(vals)
+
+            get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
+            get_otd.write({"status":"Doblado"})
+            get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=","OT")])
+            get_otp.write({"status":"doblado"})
+            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo)])
+
+            lines = []
+            line = (5,0,{})
+            lines.append(line)
+            for docs in self.cortadora_id:
+                line = (0,get_info.id,{
+                    "nombre": docs.nombre,
+                    "documentos":docs.documentos,
+                })
+                lines.append(line)
+            get_info.cortadora_id = lines
+
+            self.env['dtm.materiales.laser'].search([("id","=",self.id)]).unlink()
+
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
     _description = "Lleva el listado de todo el material cortado en la Laser"
 
-    material = fields.Char(string="MATERIAL", readonly=True)
-    calibre = fields.Char(string="CALIBRE", readonly=True)
-    largo = fields.Char(string="LARGO", readonly=True)
-    ancho = fields.Char(string="ANCHO", readonly=True)
-    sheets = fields.Char(string="SHEETS", readonly=True)
-    drawingname  = fields.Char(string="DRAWINGNAME", readonly=True)
-    material_id = fields.Integer()
+    orden_trabajo = fields.Integer(string="Orden de Trabajo")
+    fecha_entrada = fields.Date(string="Fecha de Término")
+    nombre_orden = fields.Char(string="Nombre")
+    cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
+
+
+
