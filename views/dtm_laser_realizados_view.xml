@@ -32,20 +32,27 @@
                             <field name="orden_trabajo"/>
                             <field name="fecha_entrada"/>
                             <field name="nombre_orden"/>
-                            <field name="cortadora_id"  >
-                                <tree>
-                                    <field name="nombre" />
-                                    <field name="cortado" invisible="1"/>
-                                </tree>
-                               <form>
-                                    <group >
-                                        <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
-                                        <field name="nombre" invisible="1"></field>
-                                    </group>
-                                 </form>
-
-                            </field>
                         </group>
+                        <notebook>
+                            <page string="Archivos">
+                                <field name="cortadora_id"  >
+                                    <tree>
+                                        <field name="nombre" />
+                                        <field name="cortado" widget="boolean_toggle"/>
+                                    </tree>
+                                   <form>
+                                        <group >
+                                            <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
+                                            <field name="nombre" invisible="1"></field>
+                                        </group>
+                                     </form>
+
+                                </field>
+                            </page>
+                            <page string="Material">
+
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
