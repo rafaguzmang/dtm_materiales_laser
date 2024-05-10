@@ -9,6 +9,7 @@ class MaterialesLasser(models.Model):
     orden_trabajo = fields.Integer(string="Orden de Trabajo")
     fecha_entrada = fields.Date(string="Fecha de antrada")
     nombre_orden = fields.Char(string="Nombre")
+<<<<<<< HEAD
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" )
     tipo_orden = fields.Char(string="Tipo")
 
@@ -16,6 +17,12 @@ class MaterialesLasser(models.Model):
 
 
 
+=======
+    cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
+
+    #--------------------  Llena la tabla con las ordenes de servicio ----------------
+
+>>>>>>> 631a1e9b911de6a92f4531f3eeca87148b87b9a3
     def action_terminado(self):
         cont = 0
         for corte in self.cortadora_id:
