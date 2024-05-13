@@ -11,6 +11,7 @@ class MaterialesLasser(models.Model):
     nombre_orden = fields.Char(string="Nombre")
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" )
     tipo_orden = fields.Char(string="Tipo")
+    materiales_id = fields.Many2many("dtm.cortadora.laminas")
 
     #--------------------  Llena la tabla con las ordenes de servicio ----------------
 
@@ -68,5 +69,15 @@ class Cortadora(models.Model):
     documentos = fields.Binary()
     nombre = fields.Char()
     cortado = fields.Boolean(default=False)
+
+class Cortadora(models.Model):
+    _name = "dtm.cortadora.laminas"
+    _description = "Guarda las laminas a cortar con su id, localización y medidas"
+
+    identificador = fields.Integer(string="ID")
+    nombre = fields.Char(string="Material")
+    medida = fields.Char(string="Medidas")
+    cantidad = fields.Integer(string="Cantidad")
+    localizacion = fields.Char(string="Localizacion")
 
 

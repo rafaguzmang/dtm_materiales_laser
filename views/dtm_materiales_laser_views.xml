@@ -55,7 +55,17 @@
                                     </field>
                                 </page>
                                 <page string="Material">
+                                       <field name="materiales_id">
+                                           <tree>
+                                                <field name="identificador"/>
+                                                <field name="nombre"/>
+                                                <field name="medida"/>
+                                                <field name="cantidad"/>
+                                                <field name="localizacion"/>
+                                           </tree>
 
+
+                                       </field>
                                 </page>
                         </notebook>
                     </sheet>
