@@ -1,5 +1,7 @@
 from odoo import api,models,fields
 from datetime import datetime
+from odoo.exceptions import ValidationError
+
 
 
 class MaterialesLasser(models.Model):
@@ -14,6 +16,73 @@ class MaterialesLasser(models.Model):
     materiales_id = fields.Many2many("dtm.cortadora.laminas")
 
 
+    def action_finalizar(self):
+        get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=","OT")])
+        get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
+        cont = 0;
+        for corte in self.cortadora_id:
+            if not corte.cortado:
+              break
+            cont +=1
+        if cont == 0:
+                 get_otd.write({"status":"Corte"})
+                 get_otp.write({"status":"corte"})
+        else:
+            if corte.primera_pieza:
+                get_otd.write({"status":"Corte - Revisión FAI"})
+                get_otp.write({"status":"corterevision"})
+            else:
+                get_otd.write({"status":"Corte - Doblado"})
+                get_otp.write({"status":"cortedoblado"})
+        if len(self.cortadora_id) == cont:
+            vals = {
+                "orden_trabajo": self.orden_trabajo,
+                "fecha_entrada": datetime.today(),
+                "nombre_orden": self.nombre_orden,
+            }
+            get_info = self.env['dtm.laser.realizados'].search([])
+            get_info.create(vals)
+            get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
+            get_otd.write({"status":"Doblado"})
+            get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=","OT")])
+            get_otp.write({
+                "status":"doblado"
+            })
+            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo)])
+            lines = []
+            for docs in self.cortadora_id:
+                line = (0,get_info.id,{
+                    "nombre": docs.nombre,
+                    "documentos":docs.documentos,
+                })
+                lines.append(line)
+            get_info.cortadora_id = lines
+            self.env['dtm.materiales.laser'].search([("id","=",self.id)]).unlink()
+
+        else:
+             raise ValidationError("Todos los nesteos deben estar cortados")
+
+
+    def get_view(self, view_id=None, view_type='form', **options):
+        res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
+        get_laser = self.env['dtm.materiales.laser'].search([])
+        for main in get_laser:
+
+            get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
+            get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
+
+            for n_archivo in main.cortadora_id:
+
+                if n_archivo.cortado:
+                    break
+                get_otd.write({"status":"Corte"})
+                get_otp.write({"status":"corte"})
+
+
+
+
+
+        return res
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
@@ -32,6 +101,7 @@ class Cortadora(models.Model):
     documentos = fields.Binary()
     nombre = fields.Char()
     cortado = fields.Boolean(default=False)
+    primera_pieza = fields.Boolean(default=False)
 
     @api.onchange("cortado")
     def _action_cortado (self):
@@ -40,57 +110,25 @@ class Cortadora(models.Model):
                 for n_archivo in main.cortadora_id:
                     if self.nombre == n_archivo.nombre:
 
-
                         get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
                         get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
 
-                        for documento in get_otp.cortadora_id:
-                            if documento.nombre == self.nombre:
-                                if self.cortado:
-                                    documento.cortado = "Material cortado"
-                                else:
-                                    documento.cortado = ""
-
-                        cont = 0
-                        for corte in main.cortadora_id:
-                            cont += 1
-                            if not corte.cortado:
-                                break
-
-                        if cont == 0:
-                             get_otd.write({"status":"Corte"})
-                             get_otp.write({"status":"corte"})
+                        if self.primera_pieza:
+                            documentos = get_otp.primera_pieza_id
                         else:
-                            get_otd.write({"status":"Corte - Doblado"})
-                            get_otp.write({"status":"cortedoblado"})
-                        if len(main.cortadora_id) == cont:
-                            vals = {
-                                "orden_trabajo": main.orden_trabajo,
-                                "fecha_entrada": datetime.today(),
-                                "nombre_orden": main.nombre_orden,
-                            }
+                            documentos = get_otp.cortadora_id
 
-                            get_info = self.env['dtm.laser.realizados'].search([])
-                            get_info.create(vals)
-
-                            get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
-                            get_otd.write({"status":"Doblado"})
-                            get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
-                            get_otp.write({"status":"doblado"})
-
-                            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", main.orden_trabajo)])
-
-                            lines = []
-                            for docs in main.cortadora_id:
-                                line = (0,get_info.id,{
-                                    "nombre": docs.nombre,
-                                    "documentos":docs.documentos,
-                                })
-                                lines.append(line)
-                            get_info.cortadora_id = lines
-
-                            self.env['dtm.materiales.laser'].search([("id","=",main.id)]).unlink()
-
+                        for documento in documentos:
+                                if documento.nombre == self.nombre:
+                                    if self.cortado:
+                                        documento.cortado = "Material cortado"
+                                        if self.primera_pieza:
+                                            get_otd.write({"status":"Corte - Revisión FAI"})
+                                            get_otp.write({"status":"corterevision"})
+                                        get_otd.write({"status":"Corte - Doblado"})
+                                        get_otp.write({"status":"cortedoblado"})
+                                    else:
+                                        documento.cortado = ""
 
 
 
