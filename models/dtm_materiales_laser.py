@@ -8,12 +8,12 @@ class MaterialesLasser(models.Model):
     _name = "dtm.materiales.laser"
     _description = "Lleva el listado de los materiales a cortar en la laser"
 
-    orden_trabajo = fields.Integer(string="Orden de Trabajo")
-    fecha_entrada = fields.Date(string="Fecha de antrada")
-    nombre_orden = fields.Char(string="Nombre")
-    cortadora_id = fields.Many2many("dtm.documentos.cortadora" )
-    tipo_orden = fields.Char(string="Tipo")
-    materiales_id = fields.Many2many("dtm.cortadora.laminas")
+    orden_trabajo = fields.Integer(string="Orden de Trabajo", readonly=True)
+    fecha_entrada = fields.Date(string="Fecha de antrada", readonly=True)
+    nombre_orden = fields.Char(string="Nombre", readonly=True)
+    cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly=True)
+    tipo_orden = fields.Char(string="Tipo", readonly=True)
+    materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
 
 
     def action_finalizar(self):
