@@ -77,11 +77,6 @@ class MaterialesLasser(models.Model):
                     break
                 get_otd.write({"status":"Corte"})
                 get_otp.write({"status":"corte"})
-
-
-
-
-
         return res
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
