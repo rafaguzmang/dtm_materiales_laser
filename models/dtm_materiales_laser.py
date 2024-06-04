@@ -57,11 +57,23 @@ class MaterialesLasser(models.Model):
                 })
                 lines.append(line)
             get_info.cortadora_id = lines
-            self.env['dtm.materiales.laser'].search([("id","=",self.id)]).unlink()
 
+            for lamina in self.materiales_id:
+                print(lamina.identificador,lamina.nombre,lamina.medida,lamina.cantidad)
+                get_lamina = self.env['dtm.materiales'].search([("codigo","=",lamina.identificador)])
+                print(get_lamina.codigo,get_lamina.material_id.nombre)
+                cantidad = get_lamina.cantidad - lamina.cantidad
+                apartado = get_lamina.apartado - lamina.cantidad
+                vals = {
+                    "cantidad":cantidad,
+                    "apartado":apartado,
+                    "disponible":cantidad - apartado,
+                }
+                print(vals)
+
+            # self.env['dtm.materiales.laser'].search([("id","=",self.id)]).unlink()
         else:
              raise ValidationError("Todos los nesteos deben estar cortados")
-
 
     def get_view(self, view_id=None, view_type='form', **options):
         res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
@@ -87,7 +99,6 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
     fecha_entrada = fields.Date(string="Fecha de Término")
     nombre_orden = fields.Char(string="Nombre")
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
-
 
 class Cortadora(models.Model):
     _name = "dtm.documentos.cortadora"
@@ -124,8 +135,6 @@ class Cortadora(models.Model):
                                         get_otp.write({"status":"cortedoblado"})
                                     else:
                                         documento.cortado = ""
-
-
 
 class Cortadora(models.Model):
     _name = "dtm.cortadora.laminas"
