@@ -59,9 +59,7 @@ class MaterialesLasser(models.Model):
             get_info.cortadora_id = lines
 
             for lamina in self.materiales_id:
-                print(lamina.identificador,lamina.nombre,lamina.medida,lamina.cantidad)
                 get_lamina = self.env['dtm.materiales'].search([("codigo","=",lamina.identificador)])
-                print(get_lamina.codigo,get_lamina.material_id.nombre)
                 cantidad = get_lamina.cantidad - lamina.cantidad
                 apartado = get_lamina.apartado - lamina.cantidad
                 vals = {
@@ -69,9 +67,8 @@ class MaterialesLasser(models.Model):
                     "apartado":apartado,
                     "disponible":cantidad - apartado,
                 }
-                print(vals)
 
-            # self.env['dtm.materiales.laser'].search([("id","=",self.id)]).unlink()
+                get_lamina.write(vals)
         else:
              raise ValidationError("Todos los nesteos deben estar cortados")
 
