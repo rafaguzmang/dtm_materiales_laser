@@ -15,7 +15,6 @@ class MaterialesLasser(models.Model):
     tipo_orden = fields.Char(string="Tipo", readonly=True)
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
 
-
     def action_finalizar(self):
         get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=","OT")])
         get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
