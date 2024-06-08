@@ -103,8 +103,8 @@ class Cortadora(models.Model):
 
     documentos = fields.Binary()
     nombre = fields.Char()
-    cortado = fields.Boolean(default=False)
-    primera_pieza = fields.Boolean(default=False)
+    cortado = fields.Boolean()
+    primera_pieza = fields.Boolean()
 
     @api.onchange("cortado")
     def _action_cortado (self):
