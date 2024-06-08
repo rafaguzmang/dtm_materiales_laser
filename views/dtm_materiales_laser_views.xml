@@ -41,8 +41,7 @@
                                         <tree>
                                             <field name="nombre" />
                                             <field name="cortado" widget="boolean_toggle"/>
-
-        <!--                                    <button type="object" name="action_listo" string="OK"  icon="fa-check" class="btn btn-primary"/>-->
+                                            <field name="estado" />
                                         </tree>
                                        <form>
                                             <group >
