@@ -104,7 +104,12 @@ class Cortadora(models.Model):
     documentos = fields.Binary()
     nombre = fields.Char()
     cortado = fields.Boolean()
+<<<<<<< HEAD
     primera_pieza = fields.Boolean()
+=======
+    primera_pieza = fields.Boolean(default=False)
+    estado = fields.Char(string="Estado del corte")
+>>>>>>> 67cdaba7237cb02cb9cb08095137f586b6a86475
 
     @api.onchange("cortado")
     def _action_cortado (self):
@@ -120,7 +125,13 @@ class Cortadora(models.Model):
                             documentos = get_otp.cortadora_id
                         for documento in documentos:
                             if documento.nombre == self.nombre:
+                                get_self = self.env['dtm.documentos.cortadora'].search([("id","=",self._origin.id)])
+                                print(get_self)
                                 if self.cortado:
+                                    get_self.write({
+                                        "estado": "Material cortado"
+                                    })
+                                    self.estado = "Material cortado"
                                     documento.cortado = "Material cortado"
                                     get_otd.write({"status":"Corte - Doblado"})
                                     get_otp.write({"status":"cortedoblado"})
@@ -128,6 +139,10 @@ class Cortadora(models.Model):
                                         get_otd.write({"status":"Corte - Revisión FAI"})
                                         get_otp.write({"status":"corterevision"})
                                 else:
+                                    get_self.write({
+                                        "estado": ""
+                                    })
+                                    self.estado = ""
                                     documento.cortado = ""
 
 class Cortadora(models.Model):
