@@ -67,8 +67,9 @@ class MaterialesLasser(models.Model):
                     "apartado":apartado,
                     "disponible":cantidad - apartado,
                 }
-
                 get_lamina.write(vals)
+            get_self = self.env['dtm.materiales.laser'].browse(self.id)
+            get_self.unlink()
         else:
              raise ValidationError("Todos los nesteos deben estar cortados")
 
@@ -112,26 +113,23 @@ class Cortadora(models.Model):
             for main in get_laser:
                 for n_archivo in main.cortadora_id:
                     if self.nombre == n_archivo.nombre:
-
                         get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
                         get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
-
                         if self.primera_pieza:
                             documentos = get_otp.primera_pieza_id
                         else:
                             documentos = get_otp.cortadora_id
-
                         for documento in documentos:
-                                if documento.nombre == self.nombre:
-                                    if self.cortado:
-                                        documento.cortado = "Material cortado"
-                                        if self.primera_pieza:
-                                            get_otd.write({"status":"Corte - Revisión FAI"})
-                                            get_otp.write({"status":"corterevision"})
-                                        get_otd.write({"status":"Corte - Doblado"})
-                                        get_otp.write({"status":"cortedoblado"})
-                                    else:
-                                        documento.cortado = ""
+                            if documento.nombre == self.nombre:
+                                if self.cortado:
+                                    documento.cortado = "Material cortado"
+                                    get_otd.write({"status":"Corte - Doblado"})
+                                    get_otp.write({"status":"cortedoblado"})
+                                    if self.primera_pieza:
+                                        get_otd.write({"status":"Corte - Revisión FAI"})
+                                        get_otp.write({"status":"corterevision"})
+                                else:
+                                    documento.cortado = ""
 
 class Cortadora(models.Model):
     _name = "dtm.cortadora.laminas"
