@@ -20,7 +20,7 @@ class MaterialesLasser(models.Model):
         get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
         cont = 0;
         for corte in self.cortadora_id:
-            if not corte.cortado:
+            if corte.estado != "Material cortado":
               break
             cont +=1
         if cont == 0:
@@ -104,12 +104,8 @@ class Cortadora(models.Model):
     documentos = fields.Binary()
     nombre = fields.Char()
     cortado = fields.Boolean()
-<<<<<<< HEAD
-    primera_pieza = fields.Boolean()
-=======
     primera_pieza = fields.Boolean(default=False)
     estado = fields.Char(string="Estado del corte")
->>>>>>> 67cdaba7237cb02cb9cb08095137f586b6a86475
 
     @api.onchange("cortado")
     def _action_cortado (self):
@@ -126,7 +122,6 @@ class Cortadora(models.Model):
                         for documento in documentos:
                             if documento.nombre == self.nombre:
                                 get_self = self.env['dtm.documentos.cortadora'].search([("id","=",self._origin.id)])
-                                print(get_self)
                                 if self.cortado:
                                     get_self.write({
                                         "estado": "Material cortado"
