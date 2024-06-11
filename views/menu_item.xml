@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
      <menuitem name="Cortadora Laser" id="menu_root_cortadora_laser">
-        <menuitem id="menu_dtm_materiales_laser"  action="dtm_materiales_laser.dtm_materiales_laser_accion" />
-        <menuitem id="menu_dtm_laser_realizados"  action="dtm_materiales_laser.dtm_laser_realizados_accion" />
+<!--        <menuitem id="menu_dtm_materiales_laser"  action="dtm_materiales_laser.dtm_materiales_laser_accion" />-->
+<!--        <menuitem id="menu_dtm_laser_realizados"  action="dtm_materiales_laser.dtm_laser_realizados_accion" />-->
      </menuitem>
 </odoo>
