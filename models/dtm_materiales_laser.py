@@ -92,9 +92,10 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
     _name = "dtm.laser.realizados"
     _description = "Lleva el listado de todo el material cortado en la Laser"
 
-    orden_trabajo = fields.Integer(string="Orden de Trabajo")
-    fecha_entrada = fields.Date(string="Fecha de Término")
-    nombre_orden = fields.Char(string="Nombre")
+    orden_trabajo = fields.Integer(string="Orden de Trabajo",readonly=True)
+    tipo_orden = fields.Char(string="Tipo", readonly=True)
+    fecha_entrada = fields.Date(string="Fecha de Término",readonly=True)
+    nombre_orden = fields.Char(string="Nombre",readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
 
 class Cortadora(models.Model):
