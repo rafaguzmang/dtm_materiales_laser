@@ -72,21 +72,20 @@ class MaterialesLasser(models.Model):
         else:
              raise ValidationError("Todos los nesteos deben estar cortados")
 
-    def get_view(self, view_id=None, view_type='form', **options):
-        res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
-        get_laser = self.env['dtm.materiales.laser'].search([])
-        for main in get_laser:
-
-            get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
-            get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
-
-            for n_archivo in main.cortadora_id:
-
-                if n_archivo.cortado:
-                    break
-                get_otd.write({"status":"Corte"})
-                get_otp.write({"status":"corte"})
-        return res
+    # def get_view(self, view_id=None, view_type='form', **options):
+    #     res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
+    #     get_laser = self.env['dtm.materiales.laser'].search([])
+    #     for main in get_laser:
+    #
+    #         get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
+    #         get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
+    #
+    #         for n_archivo in main.cortadora_id:
+    #             if n_archivo.cortado:
+    #                 break
+    #             get_otd.write({"status":"Corte"})
+    #             get_otp.write({"status":"corte"})
+    #     return res
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
@@ -105,8 +104,17 @@ class Cortadora(models.Model):
     documentos = fields.Binary()
     nombre = fields.Char()
     cortado = fields.Boolean()
+    contador = fields.Integer()
     primera_pieza = fields.Boolean(default=False)
     estado = fields.Char(string="Estado del corte")
+
+    def action_mas(self):
+        self.contador += 1
+
+    def action_menos(self):
+        self.contador -= 1
+        if self.contador < 0:
+            self.contador = 0
 
     @api.onchange("cortado")
     def _action_cortado (self):

@@ -42,15 +42,18 @@
                                     <field name="cortadora_id"  >
                                         <tree>
                                             <field name="nombre" />
-                                            <field name="cortado" widget="boolean_toggle"/>
+                                            <field name="contador"  readonly ="0"/>
+                                            <field name="cortado"  widget="boolean_toggle" />
                                             <field name="estado" />
+                                            <button type="object" name="action_menos" icon="fa-minus" class="btn btn-primary"/>
+                                            <button type="object" name="action_mas" icon="fa-plus" class="btn btn-primary"/>
                                         </tree>
-                                       <form>
+                                        <form>
                                             <group >
                                                 <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
                                                 <field name="nombre" invisible="1"></field>
                                             </group>
-                                         </form>
+                                        </form>
 
                                     </field>
                                 </page>
@@ -65,8 +68,6 @@
                                                 <field name="requerido"/>
                                                 <field name="localizacion"/>
                                            </tree>
-
-
                                        </field>
                                 </page>
                         </notebook>
