@@ -97,7 +97,7 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
     nombre_orden = fields.Char(string="Nombre",readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
 
-class Cortadora(models.Model):
+class Documentos(models.Model):
     _name = "dtm.documentos.cortadora"
     _description = "Guarda los nesteos del Radán"
 
@@ -160,5 +160,7 @@ class Cortadora(models.Model):
     inventario = fields.Integer(string="Inventario")
     requerido = fields.Integer(string="Requerido (Compras)")
     localizacion = fields.Char(string="Localizacion")
+
+
 
 

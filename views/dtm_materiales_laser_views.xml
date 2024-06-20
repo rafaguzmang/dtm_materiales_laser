@@ -2,7 +2,7 @@
 <odoo>
 
     <data>
-         <record id="dtm_materiales_laser_tree" model="ir.ui.view">
+        <record id="dtm_materiales_laser_tree" model="ir.ui.view">
             <field name="name">dtm_materiales_laser_tree</field>
             <field name="model">dtm.materiales.laser</field>
             <field name="arch" type="xml">
@@ -20,8 +20,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="dtm_materiales_laser_tree" />
         </record>
-
-         <record id="dtm_materiales_laser_form" model="ir.ui.view">
+        <record id="dtm_materiales_laser_form" model="ir.ui.view">
             <field name="name">dtm.materiales.laser.form</field>
             <field name="model">dtm.materiales.laser</field>
             <field name="arch" type="xml">
