@@ -137,11 +137,11 @@ class Documentos(models.Model):
                                     })
                                     self.estado = "Material cortado"
                                     documento.cortado = "Material cortado"
-                                    get_otd.write({"status":"Corte - Doblado"})
-                                    get_otp.write({"status":"cortedoblado"})
+                                    get_otd.write({"status":"Corte"})
+                                    get_otp.write({"status":"corte"})
                                     if self.primera_pieza:
-                                        get_otd.write({"status":"Corte - Revisión FAI"})
-                                        get_otp.write({"status":"corterevision"})
+                                        get_otd.write({"status":"Revisión FAI"})
+                                        get_otp.write({"status":"revision"})
                                 else:
                                     get_self.write({
                                         "estado": ""
