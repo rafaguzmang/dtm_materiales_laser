@@ -138,8 +138,15 @@ class Documentos(models.Model):
                                     })
                                     self.estado = "Material cortado"
                                     documento.cortado = "Material cortado"
+<<<<<<< HEAD
+                                    get_otd.write({"status":"Corte"})
                                     get_otp.write({"status":"corte"})
                                     if self.primera_pieza:
+                                        get_otd.write({"status":"Revisión FAI"})
+=======
+                                    get_otp.write({"status":"corte"})
+                                    if self.primera_pieza:
+>>>>>>> refs/remotes/origin/main
                                         get_otp.write({"status":"revision"})
                                 else:
                                     get_self.write({
