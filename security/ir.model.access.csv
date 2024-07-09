@@ -3,6 +3,8 @@ access_dtm_materiales_laser,access.dtm.materiales_laser,model_dtm_materiales_las
 access_dtm_laser_realizados,access.dtm.laser.realizados,model_dtm_laser_realizados,base.group_user,1,1,1,1
 access_dtm_documentos_cortadora,access.dtm.documentos.cortadora,model_dtm_documentos_cortadora,base.group_user,1,1,1,1
 access_dtm_cortadora_laminas,access.dtm.cortadora.laminas,model_dtm_cortadora_laminas,base.group_user,1,1,1,1
+access_dtm_cortadora_laminas,access.dtm.cortadora.laminas,model_dtm_cortadora_laminas,base.group_user,1,1,1,1
+
 
 
 
