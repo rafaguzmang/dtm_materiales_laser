@@ -24,8 +24,8 @@ class MaterialesLasser(models.Model):
               break
             cont +=1
         if cont == 0:
-                 get_otd.write({"status":"Corte"})
-                 get_otp.write({"status":"corte"})
+             get_otd.write({"status":"Corte"})
+             get_otp.write({"status":"corte"})
         else:
             if corte.primera_pieza:
                 get_otd.write({"status":"Corte - Revisión FAI"})
@@ -105,7 +105,7 @@ class Documentos(models.Model):
     nombre = fields.Char()
     cortado = fields.Boolean()
     contador = fields.Integer()
-    primera_pieza = fields.Boolean(default=False)
+    primera_pieza = fields.Boolean()
     estado = fields.Char(string="Estado del corte")
 
     def action_mas(self):
@@ -123,24 +123,34 @@ class Documentos(models.Model):
                 for n_archivo in main.cortadora_id:
                     if self.nombre == n_archivo.nombre:
                         get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
-                        get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
+                        get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=",main.tipo_orden)])
+                        print(get_otp)
                         if self.primera_pieza:
                             documentos = get_otp.primera_pieza_id
                         else:
                             documentos = get_otp.cortadora_id
+                        print(documentos)
                         for documento in documentos:
+                            print(documento.nombre,self.nombre )
                             if documento.nombre == self.nombre:
+
                                 get_self = self.env['dtm.documentos.cortadora'].search([("id","=",self._origin.id)])
+                                print("Pasa")
                                 if self.cortado:
                                     get_self.write({
                                         "estado": "Material cortado"
                                     })
                                     self.estado = "Material cortado"
                                     documento.cortado = "Material cortado"
+<<<<<<< HEAD
                                     get_otd.write({"status":"Corte"})
                                     get_otp.write({"status":"corte"})
                                     if self.primera_pieza:
                                         get_otd.write({"status":"Revisión FAI"})
+=======
+                                    get_otp.write({"status":"corte"})
+                                    if self.primera_pieza:
+>>>>>>> refs/remotes/origin/main
                                         get_otp.write({"status":"revision"})
                                 else:
                                     get_self.write({
