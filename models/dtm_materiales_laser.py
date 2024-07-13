@@ -16,23 +16,11 @@ class MaterialesLasser(models.Model):
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
 
     def action_finalizar(self):
-        get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=","OT")])
-        get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
         cont = 0;
         for corte in self.cortadora_id:
             if corte.estado != "Material cortado":
               break
             cont +=1
-        if cont == 0:
-             get_otd.write({"status":"Corte"})
-             get_otp.write({"status":"corte"})
-        else:
-            if corte.primera_pieza:
-                get_otd.write({"status":"Corte - Revisión FAI"})
-                get_otp.write({"status":"corterevision"})
-            else:
-                get_otd.write({"status":"Corte - Doblado"})
-                get_otp.write({"status":"cortedoblado"})
         if len(self.cortadora_id) == cont:
             vals = {
                 "orden_trabajo": self.orden_trabajo,
@@ -138,15 +126,8 @@ class Documentos(models.Model):
                                     })
                                     self.estado = "Material cortado"
                                     documento.cortado = "Material cortado"
-<<<<<<< HEAD
-                                    get_otd.write({"status":"Corte"})
                                     get_otp.write({"status":"corte"})
                                     if self.primera_pieza:
-                                        get_otd.write({"status":"Revisión FAI"})
-=======
-                                    get_otp.write({"status":"corte"})
-                                    if self.primera_pieza:
->>>>>>> refs/remotes/origin/main
                                         get_otp.write({"status":"revision"})
                                 else:
                                     get_self.write({
