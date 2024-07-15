@@ -110,7 +110,6 @@ class Documentos(models.Model):
             for main in get_laser:
                 for n_archivo in main.cortadora_id:
                     if self.nombre == n_archivo.nombre:
-                        get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
                         get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=",main.tipo_orden)])
                         if self.primera_pieza:
                             documentos = get_otp.primera_pieza_id
@@ -118,7 +117,6 @@ class Documentos(models.Model):
                             documentos = get_otp.cortadora_id
                         for documento in documentos:
                             if documento.nombre == self.nombre:
-
                                 get_self = self.env['dtm.documentos.cortadora'].search([("id","=",self._origin.id)])
                                 if self.cortado:
                                     get_self.write({
