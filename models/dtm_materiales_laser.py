@@ -35,7 +35,7 @@ class MaterialesLasser(models.Model):
             get_otp.write({
                 "status":"doblado"
             })
-            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo)])
+            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo)],order='nombre desc',limit=1)
             lines = []
             for docs in self.cortadora_id:
                 line = (0,get_info.id,{
@@ -60,20 +60,7 @@ class MaterialesLasser(models.Model):
         else:
              raise ValidationError("Todos los nesteos deben estar cortados")
 
-    # def get_view(self, view_id=None, view_type='form', **options):
-    #     res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
-    #     get_laser = self.env['dtm.materiales.laser'].search([])
-    #     for main in get_laser:
-    #
-    #         get_otd = self.env['dtm.odt'].search([("ot_number","=",main.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
-    #         get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=","OT")])
-    #
-    #         for n_archivo in main.cortadora_id:
-    #             if n_archivo.cortado:
-    #                 break
-    #             get_otd.write({"status":"Corte"})
-    #             get_otp.write({"status":"corte"})
-    #     return res
+
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
