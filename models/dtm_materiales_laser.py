@@ -26,16 +26,15 @@ class MaterialesLasser(models.Model):
                 "orden_trabajo": self.orden_trabajo,
                 "fecha_entrada": datetime.today(),
                 "nombre_orden": self.nombre_orden,
+                "tipo_orden":self.tipo_orden
             }
             get_info = self.env['dtm.laser.realizados'].search([])
             get_info.create(vals)
-            get_otd = self.env['dtm.odt'].search([("ot_number","=",self.orden_trabajo)]) # Actualiza el status en los modelos odt y proceso a corte
-            get_otd.write({"status":"Doblado"})
-            get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=","OT")])
+            get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=",self.tipo_orden)])
             get_otp.write({
                 "status":"doblado"
             })
-            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo)],order='nombre desc',limit=1)
+            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden)],order='id desc',limit=1)
             lines = []
             for docs in self.cortadora_id:
                 line = (0,get_info.id,{
