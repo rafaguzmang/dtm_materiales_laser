@@ -14,8 +14,9 @@ class MaterialesLasser(models.Model):
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly=True)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
+    primera_pieza = fields.Boolean(string="Primera Pieza")
 
-    def action_finalizar(self):
+    def action_finalizar(self):#Quita la orden de pendientes por corte a cortes realizados
         cont = 0;
         for corte in self.cortadora_id:
             if corte.estado != "Material cortado":
@@ -28,13 +29,22 @@ class MaterialesLasser(models.Model):
                 "nombre_orden": self.nombre_orden,
                 "tipo_orden":self.tipo_orden
             }
-            get_info = self.env['dtm.laser.realizados'].search([])
-            get_info.create(vals)
             get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=",self.tipo_orden)])
-            get_otp.write({
-                "status":"doblado"
-            })
-            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden)],order='id desc',limit=1)
+            get_info = self.env['dtm.laser.realizados'].search([])
+            if self.primera_pieza:
+                vals["primera_pieza"]=True
+                get_info.create(vals)
+                get_otp.write({
+                    "status":"revision"
+                })
+            else:
+                vals["primera_pieza"]=False
+                get_info.create(vals)
+                get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
+                get_otp.write({
+                    "status":"doblado"
+                })
+
             lines = []
             for docs in self.cortadora_id:
                 line = (0,get_info.id,{
@@ -70,6 +80,7 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
     fecha_entrada = fields.Date(string="Fecha de Término",readonly=True)
     nombre_orden = fields.Char(string="Nombre",readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
+    primera_pieza = fields.Boolean(string="Primera Pieza")
 
 class Documentos(models.Model):
     _name = "dtm.documentos.cortadora"

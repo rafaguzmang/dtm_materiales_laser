@@ -11,6 +11,7 @@
                     <field name="tipo_orden" />
                     <field name="fecha_entrada" />
                     <field name="nombre_orden" />
+                    <field name="primera_pieza" />
                 </tree>
             </field>
         </record>
@@ -37,6 +38,7 @@
                             <field name="tipo_orden" />
                             <field name="fecha_entrada"/>
                             <field name="nombre_orden"/>
+                            <field name="primera_pieza" />
                         </group>
 
                          <notebook>
