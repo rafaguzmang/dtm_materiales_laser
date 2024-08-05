@@ -27,9 +27,10 @@ class MaterialesLasser(models.Model):
                 "orden_trabajo": self.orden_trabajo,
                 "fecha_entrada": datetime.today(),
                 "nombre_orden": self.nombre_orden,
-                "tipo_orden":self.tipo_orden
+                "tipo_orden":self.tipo_orden,
+                "materiales_id":self.materiales_id
             }
-            get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=",self.tipo_orden)])
+            get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=",self.tipo_orden)],order='id desc',limit=1)
             get_info = self.env['dtm.laser.realizados'].search([])
             if self.primera_pieza:
                 vals["primera_pieza"]=True
@@ -44,32 +45,30 @@ class MaterialesLasser(models.Model):
                 get_otp.write({
                     "status":"doblado"
                 })
+                for lamina in self.materiales_id:
+                    get_lamina = self.env['dtm.materiales'].search([("codigo","=",lamina.identificador)])
+                    cantidad = get_lamina[0].cantidad - lamina.cantidad
+                    apartado = get_lamina[0].apartado - lamina.cantidad
+                    vals = {
+                        "cantidad":cantidad,
+                        "apartado":apartado,
+                        "disponible":cantidad - apartado,
+                    }
+                    get_lamina.write(vals)
 
             lines = []
             for docs in self.cortadora_id:
-                line = (0,get_info.id,{
+                line = (0,get_info[0].id,{
                     "nombre": docs.nombre,
                     "documentos":docs.documentos,
                 })
                 lines.append(line)
             get_info.cortadora_id = lines
 
-            for lamina in self.materiales_id:
-                get_lamina = self.env['dtm.materiales'].search([("codigo","=",lamina.identificador)])
-                cantidad = get_lamina.cantidad - lamina.cantidad
-                apartado = get_lamina.apartado - lamina.cantidad
-                vals = {
-                    "cantidad":cantidad,
-                    "apartado":apartado,
-                    "disponible":cantidad - apartado,
-                }
-                get_lamina.write(vals)
             get_self = self.env['dtm.materiales.laser'].browse(self.id)
             get_self.unlink()
         else:
              raise ValidationError("Todos los nesteos deben estar cortados")
-
-
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
@@ -81,6 +80,7 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
     nombre_orden = fields.Char(string="Nombre",readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
     primera_pieza = fields.Boolean(string="Primera Pieza")
+    materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
 
 class Documentos(models.Model):
     _name = "dtm.documentos.cortadora"

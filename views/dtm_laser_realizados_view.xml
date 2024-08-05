@@ -16,6 +16,16 @@
             </field>
         </record>
 
+        <record id = "dtm_laser_realizados_search" model="ir.ui.view">
+            <field name="name">dtm_laser_realizados_search</field>
+            <field name="model">dtm.laser.realizados</field>
+            <field name ="arch" type="xml">
+               <search>
+                    <field name="orden_trabajo"/>
+               </search>
+            </field>
+        </record>
+
         <record id="dtm_laser_realizados_accion" model="ir.actions.act_window">
             <field name="name">Cortes Realizados</field>
             <field name="res_model">dtm.laser.realizados</field>
@@ -52,7 +62,17 @@
                                 </field>
                             </page>
                             <page string="Material">
-
+                                <field name="materiales_id">
+                                   <tree>
+                                        <field name="identificador"/>
+                                        <field name="nombre"/>
+                                        <field name="medida"/>
+                                        <field name="cantidad"/>
+                                        <field name="inventario"/>
+                                        <field name="requerido"/>
+                                        <field name="localizacion"/>
+                                   </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
