@@ -14,7 +14,7 @@ class MaterialesLasser(models.Model):
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly=True)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
-    primera_pieza = fields.Boolean(string="Primera Pieza")
+    primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)
 
     def action_finalizar(self):#Quita la orden de pendientes por corte a cortes realizados
         cont = 0;
@@ -22,25 +22,28 @@ class MaterialesLasser(models.Model):
             if corte.estado != "Material cortado":
               break
             cont +=1
-        if len(self.cortadora_id) == cont:
+        if len(self.cortadora_id) == cont: #Revisa que todos los archivos esten cortados para poder pasarlos al modulo de realizados
             vals = {
                 "orden_trabajo": self.orden_trabajo,
                 "fecha_entrada": datetime.today(),
                 "nombre_orden": self.nombre_orden,
                 "tipo_orden":self.tipo_orden,
-                "materiales_id":self.materiales_id
+                # "materiales_id":self.materiales_id
             }
+            # Proceso para cambiar el status en el modulo de procesos
             get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=",self.tipo_orden)],order='id desc',limit=1)
             get_info = self.env['dtm.laser.realizados'].search([])
-            if self.primera_pieza:
+            if self.primera_pieza: #Cambia status y pone valor verdadero a primera pieza
                 vals["primera_pieza"]=True
-                get_info.create(vals)
+                get_info.create(vals) #Crea la orden cortada de primera pieza
+                get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",True)],order='id desc',limit=1)
                 get_otp.write({
                     "status":"revision"
                 })
-            else:
+            else:  #Cambia status y pone valor verdadero false a primera pieza
                 vals["primera_pieza"]=False
-                get_info.create(vals)
+                vals["materiales_id"]= self.materiales_id
+                get_info.create(vals)#Crea la orden cortada de segunda pieza
                 get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
                 get_otp.write({
                     "status":"doblado"
@@ -82,7 +85,7 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
     fecha_entrada = fields.Date(string="Fecha de Término",readonly=True)
     nombre_orden = fields.Char(string="Nombre",readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
-    primera_pieza = fields.Boolean(string="Primera Pieza")
+    primera_pieza = fields.Boolean(string="Primera Pieza",readonly=True)
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
 
 class Documentos(models.Model):
@@ -107,32 +110,18 @@ class Documentos(models.Model):
     @api.onchange("cortado")
     def _action_cortado (self):
             get_laser = self.env['dtm.materiales.laser'].search([])
-            for main in get_laser:
-                for n_archivo in main.cortadora_id:
-                    if self.nombre == n_archivo.nombre:
+            for main in get_laser: #Revisa todos los archivos que estan para corte en dtm_materiales_laser
+                archivo = main.cortadora_id.mapped("nombre")
+                if self.nombre in archivo:
+                    documento = main.primera_pieza_id if main.primera_pieza else main.cortadora_id
+                    if self.nombre in documento.mapped("nombre"):#Revisa que el archivo este en la lista de archivos a cortar
+                        estado = "Material cortado" if self.cortado else "" #Pone etiqueta en cortado si el botón boleano es verdadero
+                        self.estado = estado # Cambia el estado de la etiqueta
                         get_otp = self.env['dtm.proceso'].search([("ot_number","=",main.orden_trabajo),("tipe_order","=",main.tipo_orden)])
-                        if self.primera_pieza:
-                            documentos = get_otp.primera_pieza_id
-                        else:
-                            documentos = get_otp.cortadora_id
-                        for documento in documentos:
-                            if documento.nombre == self.nombre:
-                                get_self = self.env['dtm.documentos.cortadora'].search([("id","=",self._origin.id)])
-                                if self.cortado:
-                                    get_self.write({
-                                        "estado": "Material cortado"
-                                    })
-                                    self.estado = "Material cortado"
-                                    documento.cortado = "Material cortado"
-                                    get_otp.write({"status":"corte"})
-                                    if self.primera_pieza:
-                                        get_otp.write({"status":"revision"})
-                                else:
-                                    get_self.write({
-                                        "estado": ""
-                                    })
-                                    self.estado = ""
-                                    documento.cortado = ""
+                        documentos = get_otp.primera_pieza_id if main.primera_pieza else get_otp.cortadora_id #Carga la lista de archivos según el tipo
+                        if self.nombre in documentos.mapped("nombre"):
+                            documentos.search([("nombre","=",self.nombre)]).write({"cortado":estado})#Cambia el status del corte en el modulo de procesos
+
 
 class Cortadora(models.Model):
     _name = "dtm.cortadora.laminas"
