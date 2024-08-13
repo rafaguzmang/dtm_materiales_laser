@@ -25,9 +25,6 @@
             <field name="name">dtm.materiales.laser.form</field>
             <field name="model">dtm.materiales.laser</field>
             <field name="arch" type="xml">
-                <style>
-
-                </style>
                 <form string="formulario">
                      <header>
                          <button type="object" name="action_finalizar" string="FINALIZAR ORDEN" icon="fa-print" class="btn btn-primary"/>
