@@ -9,6 +9,7 @@
         'views/dtm_materiales_laser_views.xml',
         'views/dtm_laser_realizados_view.xml',
         'views/menu_item.xml'
-    ]
+    ],
+    'license': 'LGPL-3',
 }
 

@@ -30,7 +30,7 @@
                 </style>
                 <form string="formulario">
                      <header>
-                         <button type="object" name="action_finalizar" string="FINALIZAR ORDEN" icon="fa-print" class="btn btn-primary"/>
+                         <button type="object" name="action_finalizar" string="FINALIZAR ORDEN" icon="fa-print" title="print" class="btn btn-primary"/>
                       </header>
                     <sheet>
                         <group >
@@ -49,8 +49,8 @@
                                             <field name="contador"  readonly ="0"/>
                                             <field name="cortado"  widget="boolean_toggle" />
                                             <field name="estado" />
-                                            <button type="object" name="action_menos" icon="fa-minus" class="btn btn-primary"/>
-                                            <button type="object" name="action_mas" icon="fa-plus" class="btn btn-primary"/>
+                                            <button type="object" name="action_menos" icon="fa-minus" title="minus" class="btn btn-primary"/>
+                                            <button type="object" name="action_mas" icon="fa-plus" title="plus" class="btn btn-primary"/>
                                         </tree>
                                         <form>
                                             <group >

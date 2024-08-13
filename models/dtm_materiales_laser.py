@@ -127,7 +127,7 @@ class Cortadora(models.Model):
     _name = "dtm.cortadora.laminas"
     _description = "Guarda las laminas a cortar con su id, localización y medidas"
 
-    identificador = fields.Integer(string="ID")
+    identificador = fields.Integer(string="Código")
     nombre = fields.Char(string="Material")
     medida = fields.Char(string="Medidas")
     cantidad = fields.Integer(string="Cantidad")
