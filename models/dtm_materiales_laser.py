@@ -53,12 +53,14 @@ class MaterialesLasser(models.Model):
                     cantidad = 0
                     apartado = 0
                     if get_lamina:
-                        cantidad = get_lamina[0].cantidad - lamina.cantidad
+                        cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
                         apartado = get_lamina[0].apartado - lamina.cantidad
+                        disponible = 0 if cantidad - apartado < 0 else  cantidad - apartado
+
                     vals = {
                         "cantidad":cantidad,
                         "apartado":apartado,
-                        "disponible":cantidad - apartado,
+                        "disponible":disponible,
                     }
                     get_lamina.write(vals)
 
