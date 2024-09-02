@@ -17,12 +17,9 @@ class MaterialesLasser(models.Model):
     primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)
 
     def action_finalizar(self):#Quita la orden de pendientes por corte a cortes realizados
-        cont = 0;
-        for corte in self.cortadora_id:
-            if corte.estado != "Material cortado":
-              break
-            cont +=1
-        if len(self.cortadora_id) == cont: #Revisa que todos los archivos esten cortados para poder pasarlos al modulo de realizados
+        if False in self.cortadora_id.mapped('estado'): #Revisa que todos los archivos esten cortados para poder pasarlos al modulo de realizados
+            raise ValidationError("Todos los nesteos deben estar cortados")
+        else:
             vals = {
                 "orden_trabajo": self.orden_trabajo,
                 "fecha_entrada": datetime.today(),
@@ -36,7 +33,6 @@ class MaterialesLasser(models.Model):
             if self.primera_pieza: #Cambia status y pone valor verdadero a primera pieza
                 vals["primera_pieza"]=True
                 get_info.create(vals) #Crea la orden cortada de primera pieza
-                get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",True)],order='id desc',limit=1)
                 get_otp.write({
                     "status":"revision"
                 })
@@ -44,17 +40,16 @@ class MaterialesLasser(models.Model):
                 vals["primera_pieza"]=False
                 vals["materiales_id"]= self.materiales_id
                 get_info.create(vals)#Crea la orden cortada de segunda pieza
-                get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
                 get_otp.write({
                     "status":"doblado"
                 })
                 for lamina in self.materiales_id:
-                    get_lamina = self.env['dtm.materiales'].search([("codigo","=",lamina.identificador)])
+                    get_lamina = self.env['dtm.diseno.almacen'].search([("id","=",lamina.identificador)])
                     cantidad = 0
                     apartado = 0
                     if get_lamina:
                         cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
-                        apartado = get_lamina[0].apartado - lamina.cantidad
+                        apartado = 0 if get_lamina[0].apartado - lamina.cantidad < 0 else get_lamina[0].apartado - lamina.cantidad
                         disponible = 0 if cantidad - apartado < 0 else  cantidad - apartado
 
                     vals = {
@@ -63,9 +58,9 @@ class MaterialesLasser(models.Model):
                         "disponible":disponible,
                     }
                     get_lamina.write(vals)
-
+            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
             lines = []
-            for docs in self.cortadora_id:
+            for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
                 line = (0,get_info[0].id,{
                     "nombre": docs.nombre,
                     "documentos":docs.documentos,
@@ -75,8 +70,7 @@ class MaterialesLasser(models.Model):
 
             get_self = self.env['dtm.materiales.laser'].browse(self.id)
             get_self.unlink()
-        else:
-             raise ValidationError("Todos los nesteos deben estar cortados")
+
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
