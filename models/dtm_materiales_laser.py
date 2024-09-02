@@ -52,6 +52,7 @@ class MaterialesLasser(models.Model):
                     get_lamina = self.env['dtm.materiales'].search([("codigo","=",lamina.identificador)])
                     cantidad = 0
                     apartado = 0
+                    disponible = 0
                     if get_lamina:
                         cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
                         apartado = get_lamina[0].apartado - lamina.cantidad
