@@ -45,6 +45,7 @@ class MaterialesLasser(models.Model):
                 })
                 for lamina in self.materiales_id:
                     get_lamina = self.env['dtm.diseno.almacen'].search([("id","=",lamina.identificador)])
+                    get_mat_line = self.env['dtm.materials.line'].search([("materials_list","=",lamina.identificador)])
                     cantidad = 0
                     apartado = 0
                     if get_lamina:
@@ -58,10 +59,12 @@ class MaterialesLasser(models.Model):
                         "disponible":disponible,
                     }
                     get_lamina.write(vals)
+                    for line in get_mat_line:
+                        line.write({"materials_inventory":cantidad})
             get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
             lines = []
             for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
-                line = (0,get_info[0].id,{
+                line = (0,get_info.id,{
                     "nombre": docs.nombre,
                     "documentos":docs.documentos,
                 })
@@ -109,7 +112,7 @@ class Documentos(models.Model):
             for main in get_laser: #Revisa todos los archivos que estan para corte en dtm_materiales_laser
                 archivo = main.cortadora_id.mapped("nombre")
                 if self.nombre in archivo:
-                    documento = main.primera_pieza_id if main.primera_pieza else main.cortadora_id
+                    documento =  main.cortadora_id
                     if self.nombre in documento.mapped("nombre"):#Revisa que el archivo este en la lista de archivos a cortar
                         estado = "Material cortado" if self.cortado else "" #Pone etiqueta en cortado si el botón boleano es verdadero
                         self.estado = estado # Cambia el estado de la etiqueta
