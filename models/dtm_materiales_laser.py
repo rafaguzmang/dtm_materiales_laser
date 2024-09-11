@@ -11,7 +11,7 @@ class MaterialesLasser(models.Model):
     orden_trabajo = fields.Integer(string="Orden de Trabajo", readonly=True)
     fecha_entrada = fields.Date(string="Fecha de antrada", readonly=True)
     nombre_orden = fields.Char(string="Nombre", readonly=True)
-    cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly=True)
+    cortadora_id = fields.Many2many("dtm.documentos.cortadora" )
     tipo_orden = fields.Char(string="Tipo", readonly=True)
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
     primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)
@@ -48,6 +48,7 @@ class MaterialesLasser(models.Model):
                     get_mat_line = self.env['dtm.materials.line'].search([("materials_list","=",lamina.identificador)])
                     cantidad = 0
                     apartado = 0
+                    disponible = 0
                     if get_lamina:
                         cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
                         apartado = 0 if get_lamina[0].apartado - lamina.cantidad < 0 else get_lamina[0].apartado - lamina.cantidad
@@ -112,7 +113,8 @@ class Documentos(models.Model):
             for main in get_laser: #Revisa todos los archivos que estan para corte en dtm_materiales_laser
                 archivo = main.cortadora_id.mapped("nombre")
                 if self.nombre in archivo:
-                    documento =  main.cortadora_id
+
+                    documento = main.cortadora_id
                     if self.nombre in documento.mapped("nombre"):#Revisa que el archivo este en la lista de archivos a cortar
                         estado = "Material cortado" if self.cortado else "" #Pone etiqueta en cortado si el botón boleano es verdadero
                         self.estado = estado # Cambia el estado de la etiqueta
