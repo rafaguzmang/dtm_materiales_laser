@@ -11,7 +11,7 @@ class MaterialesLasser(models.Model):
     orden_trabajo = fields.Integer(string="Orden de Trabajo", readonly=True)
     fecha_entrada = fields.Date(string="Fecha de antrada", readonly=True)
     nombre_orden = fields.Char(string="Nombre", readonly=True)
-    cortadora_id = fields.Many2many("dtm.documentos.cortadora" )
+    cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly=True)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
     primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)

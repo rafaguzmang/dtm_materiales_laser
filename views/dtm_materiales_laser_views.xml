@@ -40,8 +40,8 @@
 
                          <notebook>
                                 <page string="Archivos">
-                                    <field name="cortadora_id"  >
-                                        <tree>
+                                    <field name="cortadora_id" options="{'no_create': True, 'no_create_edit': True, 'no_delete': True}" >
+                                        <tree editable="false">
                                             <field name="nombre" />
                                             <field name="contador"  readonly ="0"/>
                                             <field name="cortado"  widget="boolean_toggle" />
