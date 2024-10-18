@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 class MaterialesLasser(models.Model):
     _name = "dtm.materiales.laser"
     _description = "Lleva el listado de los materiales a cortar en la laser"
+    _rec_name = "orden_trabajo"
 
     orden_trabajo = fields.Integer(string="Orden de Trabajo", readonly=True)
     fecha_entrada = fields.Date(string="Fecha de antrada", readonly=True)
@@ -79,6 +80,8 @@ class MaterialesLasser(models.Model):
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
     _description = "Lleva el listado de todo el material cortado en la Laser"
+    _order = "orden_trabajo desc"
+    _rec_name = "orden_trabajo"
 
     orden_trabajo = fields.Integer(string="Orden de Trabajo",readonly=True)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
