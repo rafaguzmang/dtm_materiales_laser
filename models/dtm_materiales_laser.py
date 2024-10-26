@@ -44,25 +44,25 @@ class MaterialesLasser(models.Model):
                 get_otp.write({
                     "status":"doblado"
                 })
-                for lamina in self.materiales_id:
-                    get_lamina = self.env['dtm.diseno.almacen'].search([("id","=",lamina.identificador)])
-                    get_mat_line = self.env['dtm.materials.line'].search([("materials_list","=",lamina.identificador)])
-                    cantidad = 0
-                    apartado = 0
-                    disponible = 0
-                    if get_lamina:
-                        cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
-                        apartado = 0 if get_lamina[0].apartado - lamina.cantidad < 0 else get_lamina[0].apartado - lamina.cantidad
-                        disponible = 0 if cantidad - apartado < 0 else  cantidad - apartado
-
-                    vals = {
-                        "cantidad":cantidad,
-                        "apartado":apartado,
-                        "disponible":disponible,
-                    }
-                    get_lamina.write(vals)
-                    for line in get_mat_line:
-                        line.write({"materials_inventory":cantidad})
+                # for lamina in self.materiales_id:
+                #     get_lamina = self.env['dtm.diseno.almacen'].search([("id","=",lamina.identificador)])
+                #     get_mat_line = self.env['dtm.materials.line'].search([("materials_list","=",lamina.identificador)])
+                #     cantidad = 0
+                #     apartado = 0
+                #     disponible = 0
+                #     if get_lamina:
+                #         cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
+                #         apartado = 0 if get_lamina[0].apartado - lamina.cantidad < 0 else get_lamina[0].apartado - lamina.cantidad
+                #         disponible = 0 if cantidad - apartado < 0 else  cantidad - apartado
+                #
+                #     vals = {
+                #         "cantidad":cantidad,
+                #         "apartado":apartado,
+                #         "disponible":disponible,
+                #     }
+                #     get_lamina.write(vals)
+                #     for line in get_mat_line:
+                #         line.write({"materials_inventory":cantidad})
             get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
             lines = []
             for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
