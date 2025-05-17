@@ -14,6 +14,7 @@ class MaterialesLasser(models.Model):
     nombre_orden = fields.Char(string="Nombre", readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly=True)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
+    revision_ot = fields.Integer(string="VERSIÓN",readonly=True) # Esto es versión
     materiales_id = fields.Many2many("dtm.cortadora.laminas", readonly=True)
     primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)
 
@@ -26,6 +27,7 @@ class MaterialesLasser(models.Model):
                 "fecha_entrada": datetime.today(),
                 "nombre_orden": self.nombre_orden,
                 "tipo_orden":self.tipo_orden,
+                "revision_ot":self.revision_ot
                 # "materiales_id":self.materiales_id
             }
             # Proceso para cambiar el status en el modulo de procesos
@@ -77,6 +79,15 @@ class MaterialesLasser(models.Model):
             get_self.unlink()
 
 
+    def get_view(self, view_id=None, view_type='form', **options):
+        res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
+
+        # get_
+
+        return res
+
+
+
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
     _description = "Lleva el listado de todo el material cortado en la Laser"
@@ -85,6 +96,7 @@ class Realizados(models.Model): #--------------Muestra los trabajos ya realizado
 
     orden_trabajo = fields.Integer(string="Orden de Trabajo",readonly=True)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
+    revision_ot = fields.Integer(string="VERSIÓN",readonly=True) # Esto es versión
     fecha_entrada = fields.Date(string="Fecha de Término",readonly=True)
     nombre_orden = fields.Char(string="Nombre",readonly=True)
     cortadora_id = fields.Many2many("dtm.documentos.cortadora" , readonly = True)
@@ -125,7 +137,6 @@ class Documentos(models.Model):
                         documentos = get_otp.primera_pieza_id if main.primera_pieza else get_otp.cortadora_id #Carga la lista de archivos según el tipo
                         if self.nombre in documentos.mapped("nombre"):
                             documentos.search([("nombre","=",self.nombre)]).write({"cortado":estado})#Cambia el status del corte en el modulo de procesos
-
 
 class Cortadora(models.Model):
     _name = "dtm.cortadora.laminas"
