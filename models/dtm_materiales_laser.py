@@ -27,8 +27,9 @@ class MaterialesLasser(models.Model):
                 "fecha_entrada": datetime.today(),
                 "nombre_orden": self.nombre_orden,
                 "tipo_orden":self.tipo_orden,
-                "revision_ot":self.revision_ot
-                # "materiales_id":self.materiales_id
+                "revision_ot":self.revision_ot,
+                "materiales_id":[(6,0,self.materiales_id.ids)],
+                "cortadora_id":[(6,0,self.cortadora_id.ids)]
             }
             # Proceso para cambiar el status en el modulo de procesos
             get_otp = self.env['dtm.proceso'].search([("ot_number","=",self.orden_trabajo),("tipe_order","=",self.tipo_orden)],order='id desc',limit=1)
@@ -46,25 +47,7 @@ class MaterialesLasser(models.Model):
                 get_otp.write({
                     "status":"doblado"
                 })
-                # for lamina in self.materiales_id:
-                #     get_lamina = self.env['dtm.diseno.almacen'].search([("id","=",lamina.identificador)])
-                #     get_mat_line = self.env['dtm.materials.line'].search([("materials_list","=",lamina.identificador)])
-                #     cantidad = 0
-                #     apartado = 0
-                #     disponible = 0
-                #     if get_lamina:
-                #         cantidad = 0 if get_lamina[0].cantidad - lamina.cantidad  < 0 else  get_lamina[0].cantidad - lamina.cantidad
-                #         apartado = 0 if get_lamina[0].apartado - lamina.cantidad < 0 else get_lamina[0].apartado - lamina.cantidad
-                #         disponible = 0 if cantidad - apartado < 0 else  cantidad - apartado
-                #
-                #     vals = {
-                #         "cantidad":cantidad,
-                #         "apartado":apartado,
-                #         "disponible":disponible,
-                #     }
-                #     get_lamina.write(vals)
-                #     for line in get_mat_line:
-                #         line.write({"materials_inventory":cantidad})
+
             get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
             lines = []
             for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
@@ -82,7 +65,7 @@ class MaterialesLasser(models.Model):
     def get_view(self, view_id=None, view_type='form', **options):
         res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
 
-        # get_
+
 
         return res
 
