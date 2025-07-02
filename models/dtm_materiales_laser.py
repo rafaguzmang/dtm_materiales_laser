@@ -65,6 +65,8 @@ class MaterialesLasser(models.Model):
     def get_view(self, view_id=None, view_type='form', **options):
         res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
 
+        corte = self.env['dtm.materiales.laser'].search([('cortadora_id','=',False)])
+        corte.unlink()
 
 
         return res
