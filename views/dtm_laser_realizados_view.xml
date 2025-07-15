@@ -52,7 +52,7 @@
                                 <field name="cortadora_id"  >
                                     <tree>
                                         <field name="nombre" />
-                                        <field name="cortado" widget="boolean_toggle"/>
+                                        <field name="cortadora" />
                                     </tree>
                                    <form>
                                         <group >
