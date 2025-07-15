@@ -35,7 +35,7 @@
                             <field name="orden_trabajo"/>
                             <field name="tipo_orden" />
                             <field name="revision_ot" />
-                            <field name="fecha_entrada"/>
+                            <field name="create_date" string="Fecha de Entrada" readonly="1"/>
                             <field name="nombre_orden"/>
                             <field name="primera_pieza" />
                         </group>
@@ -45,9 +45,9 @@
                                     <field name="cortadora_id" options="{'no_create': True, 'no_create_edit': True, 'no_delete': True}" >
                                         <tree editable="false">
                                             <field name="nombre" />
+                                            <field name="cortadora" />
                                             <field name="contador"  readonly ="0"/>
                                             <field name="cortado"  widget="boolean_toggle" />
-                                            <field name="estado" />
                                             <button type="object" name="action_menos" icon="fa-minus" title="minus" class="btn btn-primary"/>
                                             <button type="object" name="action_mas" icon="fa-plus" title="plus" class="btn btn-primary"/>
                                         </tree>
