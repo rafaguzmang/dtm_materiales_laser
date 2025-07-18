@@ -50,7 +50,7 @@ class MaterialesLasser(models.Model):
             get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("revision_ot","=",self.revision_ot),("primera_pieza","=",self.primera_pieza)],order='id desc',limit=1)
             # lines = []
             for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
-                print(docs.nombre,docs.model_id,docs.model2_id,get_info.id)
+                # print(docs.nombre,docs.model_id,docs.model2_id,get_info.id)
                 docs.write({'model_id':None,'model2_id':get_info.id})
 
 
