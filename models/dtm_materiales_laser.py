@@ -47,18 +47,12 @@ class MaterialesLasser(models.Model):
                     "status":"doblado"
                 })
 
-            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("primera_pieza","=",False)],order='id desc',limit=1)
-            lines = []
+            get_info =  self.env['dtm.laser.realizados'].search([("orden_trabajo","=", self.orden_trabajo),("tipo_orden","=", self.tipo_orden),("revision_ot","=",self.revision_ot),("primera_pieza","=",self.primera_pieza)],order='id desc',limit=1)
+            # lines = []
             for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
-                line = (0,get_info.id,{
-                    "nombre": docs.nombre,
-                    "documentos":docs.documentos,
-                    "contador":False,
-                    "model_id":0,
-                    "model2_id":get_info.id,
-                })
-                lines.append(line)
-            get_info.cortadora_id = lines
+                print(docs.nombre,docs.model_id,docs.model2_id,get_info.id)
+                docs.write({'model_id':None,'model2_id':get_info.id})
+
 
             get_self = self.env['dtm.materiales.laser'].browse(self.id)
             get_self.unlink()
