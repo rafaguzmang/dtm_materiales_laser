@@ -51,7 +51,11 @@ class MaterialesLasser(models.Model):
             # lines = []
             for docs in self.cortadora_id:#Pasa los documentos pdf de corte a realizado
                 # print(docs.nombre,docs.model_id,docs.model2_id,get_info.id)
-                docs.write({'model_id':None,'model2_id':get_info.id})
+                docs.write({
+                    'model_id':None,
+                    'model2_id':get_info.id,
+                    'cortado':False
+                })
 
 
             get_self = self.env['dtm.materiales.laser'].browse(self.id)
