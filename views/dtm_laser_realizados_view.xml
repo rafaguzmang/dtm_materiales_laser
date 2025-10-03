@@ -52,28 +52,25 @@
                                 <field name="cortadora_id"  >
                                     <tree>
                                         <field name="nombre" />
+                                        <field name="lamina" />
+                                        <field name="cantidad" />
                                         <field name="cortadora" />
                                     </tree>
                                    <form>
                                         <group >
                                             <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
                                             <field name="nombre" invisible="1"></field>
+                                            <field name="tiempos_id">
+                                                    <tree>
+                                                        <field name="create_date" string="Fecha"/>
+                                                        <field name="tiempo"/>
+                                                        <field name="contador"/>
+                                                    </tree>
+                                                </field>
+
                                         </group>
                                      </form>
 
-                                </field>
-                            </page>
-                            <page string="Material">
-                                <field name="materiales_id">
-                                   <tree>
-                                        <field name="identificador"/>
-                                        <field name="nombre"/>
-                                        <field name="medida"/>
-                                        <field name="cantidad"/>
-                                        <field name="inventario"/>
-                                        <field name="requerido"/>
-                                        <field name="localizacion"/>
-                                   </tree>
                                 </field>
                             </page>
                         </notebook>

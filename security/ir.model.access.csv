@@ -2,8 +2,8 @@ id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_dtm_materiales_laser,access.dtm.materiales_laser,model_dtm_materiales_laser,base.group_user,1,1,1,1
 access_dtm_laser_realizados,access.dtm.laser.realizados,model_dtm_laser_realizados,base.group_user,1,1,1,1
 access_dtm_documentos_cortadora,access.dtm.documentos.cortadora,model_dtm_documentos_cortadora,base.group_user,1,1,1,1
-access_dtm_cortadora_laminas,access.dtm.cortadora.laminas,model_dtm_cortadora_laminas,base.group_user,1,1,1,1
-access_dtm_cortadora_laminas,access.dtm.cortadora.laminas,model_dtm_cortadora_laminas,base.group_user,1,1,1,1
+access_dtm_documentos_finalizados,access.dtm.documentos.finalizados,model_dtm_documentos_finalizados,base.group_user,1,1,1,1
+access_dtm_documentos_tiempos,access.dtm.documentos.tiempos,model_dtm_documentos_tiempos,base.group_user,1,1,1,1
 
 
 

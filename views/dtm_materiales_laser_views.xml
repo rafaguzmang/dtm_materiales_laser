@@ -13,6 +13,8 @@
                     <field name="fecha_entrada" />
                     <field name="nombre_orden" />
                     <field name="primera_pieza" />
+                    <field name="status" widget="progressbar"/>
+
                 </tree>
             </field>
         </record>
@@ -28,16 +30,19 @@
             <field name="arch" type="xml">
                 <form string="formulario">
                      <header>
-                         <button type="object" name="action_finalizar" string="FINALIZAR ORDEN" icon="fa-print" title="print" class="btn btn-primary"/>
+                         <button type="object" name="action_finalizar" string="FINALIZAR ORDEN" icon="fa-print" title="print" class="btn btn-primary" attrs="{'invisible':[('finalizado','!=',True)]}" />
                       </header>
                     <sheet>
-                        <group >
-                            <field name="orden_trabajo"/>
-                            <field name="tipo_orden" />
-                            <field name="revision_ot" />
-                            <field name="create_date" string="Fecha de Entrada" readonly="1"/>
-                            <field name="nombre_orden"/>
-                            <field name="primera_pieza" />
+                        <group class="d-flex justify-content-between" >
+                            <group class="col-6">
+                                <field name="orden_trabajo"/>
+                                <field name="tipo_orden" />
+                                <field name="revision_ot" />
+                                <field name="create_date" string="Fecha de Entrada" readonly="1"/>
+                                <field name="nombre_orden"/>
+                                <field name="primera_pieza" />
+                                <field name="finalizado" invisible="1" />
+                            </group>
                         </group>
 
                          <notebook>
@@ -45,34 +50,37 @@
                                     <field name="cortadora_id" options="{'no_create': True, 'no_create_edit': True, 'no_delete': True}" >
                                         <tree editable="false">
                                             <field name="nombre" />
+                                            <field name="lamina" />
+                                            <field name="cantidad" />
                                             <field name="cortadora" />
+                                            <button type="object" name="action_inicio" icon="fa-play" title="plus" class="btn btn-success" attrs="{'invisible':['|',('start','=',True),('cortado','=',True)]}"/>
+                                            <button type="object" name="action_stop" icon="fa-stop" title="plus" class="btn btn-warning" attrs="{'invisible':['|',('start','=',False),('cortado','=',True)]}"/>
                                             <field name="contador"  readonly ="0"/>
-                                            <field name="cortado"  widget="boolean_toggle" />
-                                            <button type="object" name="action_menos" icon="fa-minus" title="minus" class="btn btn-primary"/>
-                                            <button type="object" name="action_mas" icon="fa-plus" title="plus" class="btn btn-primary"/>
+                                            <button type="object" name="action_mas" icon="fa-chevron-up" title="plus" class="btn btn-primary" attrs="{'invisible':['|',('cortado','=',True),('start','!=',True)]}"/>
+                                            <field name="cortado" invisible="1" />
+                                            <field name="start" invisible="1"/>
+                                            <field name="status" />
+                                            <field name="status_bar" widget="progressbar"/>
+                                            <field name="tiempo_total"/>
                                         </tree>
                                         <form>
                                             <group >
                                                 <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
                                                 <field name="nombre" invisible="1"></field>
+                                                <field name="tiempos_id">
+                                                    <tree>
+                                                        <field name="create_date" string="Fecha"/>
+                                                        <field name="tiempo"/>
+                                                        <field name="contador"/>
+                                                    </tree>
+                                                </field>
+                                                <field name="tiempo_total" />
                                             </group>
                                         </form>
 
                                     </field>
                                 </page>
-                                <page string="Material">
-                                       <field name="materiales_id">
-                                           <tree>
-                                                <field name="identificador"/>
-                                                <field name="nombre"/>
-                                                <field name="medida"/>
-                                                <field name="cantidad"/>
-                                                <field name="inventario"/>
-                                                <field name="requerido"/>
-                                                <field name="localizacion"/>
-                                           </tree>
-                                       </field>
-                                </page>
+
                         </notebook>
                     </sheet>
                 </form>
