@@ -176,6 +176,7 @@ class Documentos(models.Model):
     def action_mas(self):
         self.contador += 1
         if self.contador >= self.cantidad:
+            self.contador = self.cantidad
             self.cortado = True
             self.action_stop()
             self.status = 'Terminado'
