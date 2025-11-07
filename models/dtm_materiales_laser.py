@@ -26,6 +26,8 @@ class MaterialesLasser(models.Model):
     ], string="Prioridad")
     usuario  = fields.Char()
     permiso = fields.Boolean(compute="_compute_permiso")
+    # Campo para saber que orden está en corte
+    en_corte = fields.Boolean()
 
     def _compute_tiempo_teorico(self):
         for record in self:
@@ -110,8 +112,11 @@ class MaterialesLasser(models.Model):
     def get_view(self, view_id=None, view_type='form', **options):
         res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
 
-        # corte = self.env['dtm.materiales.laser'].search([('cortadora_id','=',False)])
-        # corte.unlink()
+        get_self = self.env['dtm.materiales.laser'].search([])
+        for record in get_self:
+            if True in record.cortadora_id.mapped("start"):
+                record.en_corte = True
+
 
 
         return res

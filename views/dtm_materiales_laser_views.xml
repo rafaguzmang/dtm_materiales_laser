@@ -6,7 +6,7 @@
             <field name="name">dtm_materiales_laser_tree</field>
             <field name="model">dtm.materiales.laser</field>
             <field name="arch" type="xml">
-                <tree create="false" >
+                <tree create="false" decoration-success="en_corte" >
                     <field name="orden_trabajo" />
                     <field name="tipo_orden" />
                     <field name="revision_ot" />
@@ -18,6 +18,7 @@
                     <field name="status" widget="progressbar"/>
                     <field name="usuario" invisible="1"/>
                     <field name="permiso" invisible="1"/>
+                    <field name="en_corte" invisible="1"/>
 
                 </tree>
             </field>
