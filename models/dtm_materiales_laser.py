@@ -2,8 +2,6 @@ from odoo import api,models,fields
 from datetime import datetime
 from odoo.exceptions import ValidationError
 
-
-
 class MaterialesLasser(models.Model):
     _name = "dtm.materiales.laser"
     _description = "Lleva el listado de los materiales a cortar en la laser"
@@ -18,6 +16,27 @@ class MaterialesLasser(models.Model):
     primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)
     finalizado = fields.Boolean(compute='_compute_finalizado')
     status = fields.Float(string="Status", compute="_compute_status")
+    tiempo_teorico = fields.Float(string="Tiempo Estimado", readonly = True,compute="_compute_tiempo_teorico")
+    priority = fields.Selection([
+        ('0', 'Muy baja'),
+        ('1', 'Baja'),
+        ('2', 'Media'),
+        ('3', 'Alta'),
+        ('4', 'Muy alta'),
+    ], string="Prioridad")
+    usuario  = fields.Char()
+    permiso = fields.Boolean(compute="_compute_permiso")
+
+    def _compute_tiempo_teorico(self):
+        for record in self:
+            record.tiempo_teorico = sum(record.cortadora_id.mapped("tiempo_teorico"))
+
+    def _compute_permiso(self):
+        for record in self:
+            record.usuario = self.env.user.partner_id.email
+            record.permiso = False
+            if record.usuario in ["rafaguzmang@hotmail.com","calidad2@dtmindustry.com"]:
+                record.permiso = True
 
     def _compute_status(self):
         for record in self:
@@ -28,12 +47,9 @@ class MaterialesLasser(models.Model):
             if total_nesteos > 0:
                 record.status = porcentajes/total_nesteos
 
-
     def _compute_finalizado(self):
         for record in self:
             record.finalizado = False if False in record.cortadora_id.mapped('cortado') else True
-
-
 
     def action_inicio_corte(self):
         if not self.start:
@@ -91,7 +107,6 @@ class MaterialesLasser(models.Model):
 
         return self.env.ref('dtm_materiales_laser.dtm_materiales_laser_accion').read()[0]
 
-
     def get_view(self, view_id=None, view_type='form', **options):
         res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
 
@@ -136,6 +151,25 @@ class Documentos(models.Model):
     porcentaje = fields.Float()
     status = fields.Char(string='Status',readonly=True)
     tiempo_total = fields.Float(string="Tiempo",compute="_compute_tiempo_total",readonly=True)
+
+    tiempo_teorico = fields.Float(string="T/Est", readonly=True)
+    priority = fields.Selection([
+        ('0', 'Muy baja'),
+        ('1', 'Baja'),
+        ('2', 'Media'),
+        ('3', 'Alta'),
+        ('4', 'Muy alta'),
+    ], string="Prioridad")
+
+    usuario = fields.Char()
+    permiso = fields.Boolean(compute="_compute_permiso")
+
+    def _compute_permiso(self):
+        for record in self:
+            record.usuario = self.env.user.partner_id.email
+            record.permiso = False
+            if record.usuario in ["rafaguzmang@hotmail.com", "calidad2@dtmindustry.com"]:
+                record.permiso = True
 
     def _compute_tiempo_total(self):
         for record in self:

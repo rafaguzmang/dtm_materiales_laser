@@ -13,7 +13,11 @@
                     <field name="fecha_entrada" />
                     <field name="nombre_orden" />
                     <field name="primera_pieza" />
+                    <field name="tiempo_teorico" />
+                    <field name="priority" widget="priority" attrs="{'readonly':[('permiso','!=',True)]}"/>
                     <field name="status" widget="progressbar"/>
+                    <field name="usuario" invisible="1"/>
+                    <field name="permiso" invisible="1"/>
 
                 </tree>
             </field>
@@ -43,6 +47,9 @@
                                 <field name="primera_pieza" />
                                 <field name="finalizado" invisible="1" />
                             </group>
+                            <group class="col-6">
+                                <field name="tiempo_teorico"/>
+                            </group>
                         </group>
 
                          <notebook>
@@ -59,9 +66,12 @@
                                             <button type="object" name="action_mas" icon="fa-chevron-up" title="plus" class="btn btn-primary" attrs="{'invisible':['|',('cortado','=',True),('start','!=',True)]}"/>
                                             <field name="cortado" invisible="1" />
                                             <field name="start" invisible="1"/>
-                                            <field name="status" />
+                                            <field name="priority" widget="priority" attrs="{'readonly':[('permiso','!=',True)]}"/>
                                             <field name="status_bar" widget="progressbar"/>
+                                            <field name="tiempo_teorico" />
                                             <field name="tiempo_total"/>
+                                            <field name="usuario" invisible="1"/>
+                                            <field name="permiso" invisible="1"/>
                                         </tree>
                                         <form>
                                             <group >
