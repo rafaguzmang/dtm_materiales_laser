@@ -220,6 +220,11 @@ class Documentos(models.Model):
             self.action_stop()
             self.status = 'Terminado'
 
+    def action_menos(self):
+        self.contador -= 1
+        self.contador = max(self.contador,0)
+
+
     @api.onchange("cortado")
     def _action_cortado (self):
             get_procesos = self.env['dtm.proceso'].search([('ot_number','=',self.model_id.orden_trabajo)])

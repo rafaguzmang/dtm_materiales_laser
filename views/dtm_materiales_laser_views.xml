@@ -65,6 +65,7 @@
                                             <button type="object" name="action_stop" icon="fa-stop" title="plus" class="btn btn-warning" attrs="{'invisible':['|',('start','=',False),('cortado','=',True)]}"/>
                                             <field name="contador"  readonly ="0"/>
                                             <button type="object" name="action_mas" icon="fa-chevron-up" title="plus" class="btn btn-primary" attrs="{'invisible':['|',('cortado','=',True),('start','!=',True)]}"/>
+                                            <button type="object" name="action_menos" icon="fa-chevron-down" title="plus" class="btn btn-primary" attrs="{'invisible':[('permiso','!=',True)]}"/>
                                             <field name="cortado" invisible="1" />
                                             <field name="start" invisible="1"/>
                                             <field name="priority" widget="priority" attrs="{'readonly':[('permiso','!=',True)]}"/>
