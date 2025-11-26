@@ -55,8 +55,9 @@
 
                          <notebook>
                                 <page string="Archivos">
-                                    <field name="cortadora_id" options="{'no_create': True, 'no_create_edit': True, 'no_delete': True}" >
-                                        <tree editable="false">
+                                    <field name="permiso" invisible="1"/>
+                                    <field name="cortadora_id" options="{'no_create': True,  'no_delete': True}" attrs="{'readonly':[('permiso','!=',True)]}" >
+                                        <tree>
                                             <field name="nombre" />
                                             <field name="lamina" />
                                             <field name="cantidad" />
@@ -72,11 +73,13 @@
                                             <field name="status_bar" widget="progressbar"/>
                                             <field name="tiempo_teorico" />
                                             <field name="tiempo_total"/>
+                                            <field name="fecha_corte" attrs="{'invisible':[('permiso','!=',True)]}"/>
                                             <field name="usuario" invisible="1"/>
                                             <field name="permiso" invisible="1"/>
                                         </tree>
                                         <form>
                                             <group >
+                                                <field name="fecha_corte" attrs="{'invisible':[('permiso','!=',True)]}"/>
                                                 <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
                                                 <field name="nombre" invisible="1"></field>
                                                 <field name="tiempos_id">
@@ -87,6 +90,8 @@
                                                     </tree>
                                                 </field>
                                                 <field name="tiempo_total" />
+                                                <field name="permiso" invisible="1"/>
+
                                             </group>
                                         </form>
 

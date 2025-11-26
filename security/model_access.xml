@@ -1,0 +1,145 @@
+<odoo>
+    <data noupdate="0">
+<!--        dtm.materiales.laser-->
+        <record id="dtm_corte_laser_admin" model="ir.model.access">
+            <field name="name">dtm.materiales.laser admin</field>
+            <field name="model_id" ref="model_dtm_materiales_laser"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_admin"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="dtm_corte_laser_general" model="ir.model.access">
+            <field name="name">dtm.materiales.laser general</field>
+            <field name="model_id" ref="model_dtm_materiales_laser"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_general"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+        <record id="dtm_corte_laser_operaciones" model="ir.model.access">
+            <field name="name">dtm.materiales.laser opercaciones</field>
+            <field name="model_id" ref="model_dtm_materiales_laser"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_operacional"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+<!--dtm_documentos_cortadora-->
+        <record id="dtm_corte_laser_documentos_admin" model="ir.model.access">
+            <field name="name">dtm.materiales.laser.documentos admin</field>
+            <field name="model_id" ref="model_dtm_documentos_cortadora"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_admin"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="dtm_corte_laser_documentos_general" model="ir.model.access">
+            <field name="name">dtm.materiales.laser.documentos general</field>
+            <field name="model_id" ref="model_dtm_documentos_cortadora"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_general"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+        <record id="dtm_corte_laser_documentos_operaciones" model="ir.model.access">
+            <field name="name">dtm.materiales.laser.documentos operaciones</field>
+            <field name="model_id" ref="model_dtm_documentos_cortadora"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_operacional"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+<!--dtm_documentos_tiempos-->
+        <record id="dtm_documentos_tiempos_admin" model="ir.model.access">
+            <field name="name">dtm.documentos.tiempos admin</field>
+            <field name="model_id" ref="model_dtm_documentos_tiempos"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_admin"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="dtm_documentos_tiempos_general" model="ir.model.access">
+            <field name="name">dtm.documentos.tiempos general</field>
+            <field name="model_id" ref="model_dtm_documentos_tiempos"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_general"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+        <record id="dtm_documentos_tiempos_operaciones" model="ir.model.access">
+            <field name="name">dtm.documentos.tiempos operaciones</field>
+            <field name="model_id" ref="model_dtm_documentos_tiempos"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_operacional"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+<!--dtm_laser_realizados-->
+        <record id="dtm_laser_realizados_admin" model="ir.model.access">
+            <field name="name">dtm.laser.realizados admin</field>
+            <field name="model_id" ref="model_dtm_laser_realizados"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_admin"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="dtm_laser_realizados_general" model="ir.model.access">
+            <field name="name">dtm.laser.realizados general</field>
+            <field name="model_id" ref="model_dtm_laser_realizados"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_general"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+        <record id="dtm_laser_realizados_operaciones" model="ir.model.access">
+            <field name="name">dtm.laser.realizados operaciones</field>
+            <field name="model_id" ref="model_dtm_laser_realizados"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_operacional"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+<!--dtm_documentos_finalizados-->
+        <record id="dtm_documentos_finalizados_admin" model="ir.model.access">
+            <field name="name">dtm.documentos.finalizados admin</field>
+            <field name="model_id" ref="model_dtm_documentos_finalizados"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_admin"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="dtm_documentos_finalizados_general" model="ir.model.access">
+            <field name="name">dtm.documentos.finalizados general</field>
+            <field name="model_id" ref="model_dtm_documentos_finalizados"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_general"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+        <record id="dtm_documentos_finalizados_operaciones" model="ir.model.access">
+            <field name="name">dtm.documentos.finalizados operaciones</field>
+            <field name="model_id" ref="model_dtm_documentos_finalizados"/>
+            <field name="group_id" ref="dtm_materiales_laser.group_dtm_corte_laser_operacional"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+    </data>
+</odoo>

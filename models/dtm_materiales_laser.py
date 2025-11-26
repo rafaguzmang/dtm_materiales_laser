@@ -10,7 +10,7 @@ class MaterialesLasser(models.Model):
     orden_trabajo = fields.Integer(string="Orden de Trabajo", readonly=True)
     fecha_entrada = fields.Date(string="Fecha de Entrada", readonly=True)
     nombre_orden = fields.Char(string="Nombre", readonly=True)
-    cortadora_id = fields.One2many("dtm.documentos.cortadora","model_id" , readonly=True)
+    cortadora_id = fields.One2many("dtm.documentos.cortadora","model_id" , readonly=False)
     tipo_orden = fields.Char(string="Tipo", readonly=True)
     revision_ot = fields.Integer(string="VERSIÓN",readonly=True) # Esto es versión
     primera_pieza = fields.Boolean(string="Primera Pieza", readonly = True)
@@ -109,17 +109,18 @@ class MaterialesLasser(models.Model):
 
         return self.env.ref('dtm_materiales_laser.dtm_materiales_laser_accion').read()[0]
 
-    def get_view(self, view_id=None, view_type='form', **options):
-        res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
-
-        get_self = self.env['dtm.materiales.laser'].search([])
-        for record in get_self:
-            if True in record.cortadora_id.mapped("start"):
-                record.en_corte = True
-
-
-
-        return res
+    # def get_view(self, view_id=None, view_type='form', **options):
+    #     res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
+    #
+    #     get_self = self.env['dtm.materiales.laser'].search([])
+    #     for record in get_self:
+    #         record.en_corte = False
+    #         if True in record.cortadora_id.mapped("start"):
+    #             record.en_corte = True
+    #
+    #
+    #
+    #     return res
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
@@ -140,7 +141,7 @@ class Documentos(models.Model):
     _description = "Guarda los nesteos del Radán"
 
     model_id = fields.Many2one('dtm.materiales.laser')
-    documentos = fields.Binary()
+    documentos = fields.Binary(readonly=True)
     nombre = fields.Char()
     lamina = fields.Char(string='Lámina')
     cantidad = fields.Integer(string='Cantidad')
@@ -150,7 +151,7 @@ class Documentos(models.Model):
     timer = fields.Datetime()
     start = fields.Boolean()
     # Campos many
-    tiempos_id = fields.One2many('dtm.documentos.tiempos','model_id')
+    tiempos_id = fields.One2many('dtm.documentos.tiempos','model_id',readonly=True)
 
     status_bar = fields.Float(string='%',compute='_compute_status')
     porcentaje = fields.Float()
@@ -165,6 +166,7 @@ class Documentos(models.Model):
         ('3', 'Alta'),
         ('4', 'Muy alta'),
     ], string="Prioridad")
+    fecha_corte = fields.Date(string='F.Corte',readonly=False)
 
     usuario = fields.Char()
     permiso = fields.Boolean(compute="_compute_permiso")

@@ -1,0 +1,18 @@
+<odoo>
+    <record id="group_dtm_corte_laser_admin" model="res.groups">
+        <field name="name">DTM Corte Laser Admin</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_dtm_corte_laser_operacional" model="res.groups">
+        <field name="name">DTM Corte Laser Operaciones</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_dtm_corte_laser_general" model="res.groups">
+        <field name="name">DTM Corte Laser General</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+
+</odoo>
