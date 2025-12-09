@@ -62,14 +62,11 @@
                                             <field name="lamina" />
                                             <field name="cantidad" />
                                             <field name="cortadora" />
-                                            <button type="object" name="action_inicio" icon="fa-play" title="plus" class="btn btn-success" attrs="{'invisible':['|',('start','=',True),('cortado','=',True)]}"/>
-                                            <button type="object" name="action_stop" icon="fa-stop" title="plus" class="btn btn-warning" attrs="{'invisible':['|',('start','=',False),('cortado','=',True)]}"/>
                                             <field name="contador"  readonly ="0"/>
-                                            <button type="object" name="action_mas" icon="fa-chevron-up" title="plus" class="btn btn-primary" attrs="{'invisible':['|',('cortado','=',True),('start','!=',True)]}"/>
-                                            <button type="object" name="action_menos" icon="fa-chevron-down" title="plus" class="btn btn-primary" attrs="{'invisible':[('permiso','!=',True)]}"/>
                                             <field name="cortado" invisible="1" />
                                             <field name="start" invisible="1"/>
-                                            <field name="priority" widget="priority" attrs="{'readonly':[('permiso','!=',True)]}"/>
+<!--                                            <field name="priority" widget="priority" attrs="{'readonly':[('permiso','!=',True)]}"/>-->
+                                            <field name="priority" widget="priority" />
                                             <field name="status_bar" widget="progressbar"/>
                                             <field name="tiempo_teorico" />
                                             <field name="tiempo_total"/>
@@ -79,7 +76,8 @@
                                         </tree>
                                         <form>
                                             <group >
-                                                <field name="fecha_corte" attrs="{'invisible':[('permiso','!=',True)]}"/>
+<!--                                                <field name="fecha_corte" attrs="{'invisible':[('permiso','!=',True)]}"/>-->
+                                                <field name="fecha_corte"/>
                                                 <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
                                                 <field name="nombre" invisible="1"></field>
                                                 <field name="tiempos_id">
@@ -89,7 +87,7 @@
                                                         <field name="contador"/>
                                                     </tree>
                                                 </field>
-                                                <field name="tiempo_total" />
+<!--                                                <field name="tiempo_total" />-->
                                                 <field name="permiso" invisible="1"/>
 
                                             </group>

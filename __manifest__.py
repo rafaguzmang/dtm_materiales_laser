@@ -10,7 +10,8 @@
         # 'security/model_access.xml',
         'views/dtm_materiales_laser_views.xml',
         'views/dtm_laser_realizados_view.xml',
-        'views/menu_item.xml'
+        'views/menu_item.xml',
+        'views/dtm_cortadora_laser_view.xml',
     ],
     'license': 'LGPL-3',
 }

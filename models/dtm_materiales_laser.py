@@ -1,6 +1,8 @@
 from odoo import api,models,fields
 from datetime import datetime
 from odoo.exceptions import ValidationError
+import base64
+import logging
 
 class MaterialesLasser(models.Model):
     _name = "dtm.materiales.laser"
@@ -109,18 +111,69 @@ class MaterialesLasser(models.Model):
 
         return self.env.ref('dtm_materiales_laser.dtm_materiales_laser_accion').read()[0]
 
-    # def get_view(self, view_id=None, view_type='form', **options):
-    #     res = super(MaterialesLasser,self).get_view(view_id, view_type,**options)
-    #
-    #     get_self = self.env['dtm.materiales.laser'].search([])
-    #     for record in get_self:
-    #         record.en_corte = False
-    #         if True in record.cortadora_id.mapped("start"):
-    #             record.en_corte = True
-    #
-    #
-    #
-    #     return res
+    def get_view(self, view_id=None, view_type='form', **options):
+        res = super(MaterialesLasser, self).get_view(view_id, view_type, **options)
+
+        get_self = self.env['dtm.materiales.laser'].search([])
+        for record in get_self:
+            # Pone los estados (play) en falso
+            record.en_corte = False
+            if True in record.cortadora_id.mapped("start"):
+                record.en_corte = True
+
+            if all(record.cortadora_id.mapped('cortado')):
+                vals = {
+                    "orden_trabajo": record.orden_trabajo,
+                    "tipo_orden": record.tipo_orden,
+                    "revision_ot": record.revision_ot,
+                    "fecha_entrada": datetime.today(),
+                    "nombre_orden": record.nombre_orden,
+                    "primera_pieza": record.primera_pieza
+                }
+                get_realizado = self.env['dtm.laser.realizados'].search([
+                    ('orden_trabajo', '=', record.orden_trabajo),
+                    ('tipo_orden', '=', record.tipo_orden),
+                    ('revision_ot', '=', record.revision_ot),
+                    ('primera_pieza', '=', record.primera_pieza)])
+                if get_realizado:
+                    get_realizado.write(vals)
+                else:
+                    get_realizado = self.env['dtm.laser.realizados'].create(vals)
+
+                for corte in record.cortadora_id:
+                    vals = {
+                        'model_id': get_realizado.id,
+                        'documentos': corte.documentos,
+                        'nombre': corte.nombre,
+                        'lamina': corte.lamina,
+                        'cantidad': corte.cantidad,
+                        'cortadora': corte.cortadora,
+                        'cortado': corte.cortado,
+                        'contador': corte.contador,
+                    }
+                    get_doc = self.env['dtm.documentos.finalizados'].search([
+                        ('model_id', '=', get_realizado.id),
+                        ('nombre', '=', corte.nombre),
+                        ('lamina', '=', corte.lamina)
+                    ], limit=1)
+                    if get_doc:
+                        get_doc.write(vals)
+                    else:
+                        get_doc = self.env['dtm.documentos.finalizados'].create(vals)
+                    # Pasa los tiempos a finalizado
+                    [tiempo.write({'model_id': None, 'model_id2': get_doc.id}) for tiempo in corte.tiempos_id]
+
+                record.cortadora_id.unlink()
+                record.unlink()
+
+            # Borra ordenes vacías
+            if not record.cortadora_id:
+                record.unlink()
+
+
+
+
+        return res
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
     _name = "dtm.laser.realizados"
@@ -141,7 +194,7 @@ class Documentos(models.Model):
     _description = "Guarda los nesteos del Radán"
 
     model_id = fields.Many2one('dtm.materiales.laser')
-    documentos = fields.Binary(readonly=True)
+    documentos = fields.Binary()
     nombre = fields.Char()
     lamina = fields.Char(string='Lámina')
     cantidad = fields.Integer(string='Cantidad')
@@ -153,10 +206,10 @@ class Documentos(models.Model):
     # Campos many
     tiempos_id = fields.One2many('dtm.documentos.tiempos','model_id',readonly=True)
 
-    status_bar = fields.Float(string='%',compute='_compute_status')
+    status_bar = fields.Float(string='%', compute='_compute_status', readonly=True)
     porcentaje = fields.Float()
     status = fields.Char(string='Status',readonly=True)
-    tiempo_total = fields.Float(string="Tiempo",compute="_compute_tiempo_total",readonly=True)
+    tiempo_total = fields.Float(string="Tiempo",readonly=True,compute='_compute_tiempo_total')
 
     tiempo_teorico = fields.Float(string="T/Est", readonly=True)
     priority = fields.Selection([
@@ -166,10 +219,50 @@ class Documentos(models.Model):
         ('3', 'Alta'),
         ('4', 'Muy alta'),
     ], string="Prioridad")
-    fecha_corte = fields.Date(string='F.Corte',readonly=False)
+    fecha_corte = fields.Date(string='F.Corte')
 
     usuario = fields.Char()
     permiso = fields.Boolean(compute="_compute_permiso")
+
+    # @api.onchange('fecha_corte')
+    # def _onchange_fecha_corte(self):
+    #     print(self.fecha_corte)
+    #     print(self.model_id._origin.id)
+    #     self.env['dtm.materiales.laser'].browse(self.model_id._origin.id).write()
+    #     # self.write({'fecha_corte':self.fecha_corte})
+
+    def write(self,vals):
+        res = super().write(vals)
+        # for rec in self:
+        #     if 'priority' in vals:
+        #         rec.env['bus.bus'].sendone(
+        #             (self.env.user.partner_id, 'cortadora_channel'),
+        #             {
+        #                 'id':rec.id,
+        #                 'cortadora':rec.cortadora,
+        #                 'priority':rec.priority,
+        #                 'status':rec.status
+        #             }
+        #         )
+        # for rec in self:
+        #     if rec.fecha_corte and rec.priority and rec.priority != '0':
+        #         cortadora = self.env['dtm.cortadora.laser'].search([('nombre', '=', rec.nombre)], limit=1)
+        #         doc = rec.documentos
+        #         if isinstance(doc, (bytes, bytearray)):
+        #             doc = base64.b64encode(doc).decode()
+        #         vals_copy = {
+        #             'documentos': doc,
+        #             'nombre': rec.nombre,
+        #             'lamina': rec.lamina,
+        #             'cantidad': rec.cantidad,
+        #             'cortadora': rec.cortadora,
+        #             'priority': rec.priority,
+        #         }
+        #         if cortadora:
+        #             cortadora.write(vals_copy)
+        #         else:
+        #             self.env['dtm.cortadora.laser'].create(vals_copy)
+        return res
 
     def _compute_permiso(self):
         for record in self:
@@ -178,53 +271,21 @@ class Documentos(models.Model):
             if record.usuario in ["rafaguzmang@hotmail.com", "calidad2@dtmindustry.com"]:
                 record.permiso = True
 
-    def _compute_tiempo_total(self):
-        for record in self:
-            record.tiempo_total = sum(record.tiempos_id.mapped('tiempo'))
-
     def _compute_status(self):
         for record in self:
             if record.cantidad > 0:
-                record.status_bar = max((record.contador * 100)/record.cantidad,0)
-                record.porcentaje = max((record.contador * 100)/record.cantidad,0)
+                record.status_bar = max((record.contador * 100) / record.cantidad, 0)
+                record.porcentaje = max((record.contador * 100) / record.cantidad, 0)
             else:
                 record.status_bar = 0
                 record.porcentaje = 0
 
-    def action_inicio(self):
-            get_corte = self.env['dtm.materiales.laser'].search([])
-            for record in get_corte:
-                if True in record.cortadora_id.mapped('start'):
-                    for result in record.cortadora_id.ids:
-                        if self.cortadora == self.env['dtm.documentos.cortadora'].browse(result).cortadora and self.env['dtm.documentos.cortadora'].browse(result).start:
-                            documento = self.env['dtm.documentos.cortadora'].browse(result).nombre
-                            orden = self.env['dtm.documentos.cortadora'].browse(result).model_id.orden_trabajo
-                            raise ValidationError(f"Cortadora {self.cortadora}:\n Documento {documento} de la Orden {orden} esta en corte ")
+    def _compute_tiempo_total(self):
+        for record in self:
+            get_laser = self.env['dtm.documentos.cortadora'].search([('nombre', '=', record.nombre)], limit=1)
+            record.tiempo_total = sum(get_laser.tiempos_id.mapped('tiempo'))
 
-            self.start = True
-            self.timer = datetime.today()
-            self.status = 'En Proceso'
 
-    def action_stop(self):
-        self.start = False
-        self.tiempos_id.create({
-            'model_id':self.id,
-            'contador':self.contador,
-            'tiempo':round((datetime.today() - self.timer ).total_seconds() / 60.0,4)
-        })
-        self.status = 'Pausado'
-
-    def action_mas(self):
-        self.contador += 1
-        if self.contador >= self.cantidad:
-            self.contador = self.cantidad
-            self.cortado = True
-            self.action_stop()
-            self.status = 'Terminado'
-
-    def action_menos(self):
-        self.contador -= 1
-        self.contador = max(self.contador,0)
 
 
     @api.onchange("cortado")

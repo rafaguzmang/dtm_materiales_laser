@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="dtm_cortadora_laser_form_view" model="ir.ui.view">
+            <field name="name">dtm.cortadora.laser.form</field>
+            <field name="model">dtm.cortadora.laser</field>
+            <field name="arch" type="xml">
+                <form string="ModelTitle">
+                    <sheet>
+                        <field name="documentos" filename="nombre" widget="pdf_viewer"></field>
+                        <field name="nombre" invisible="0"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dtm_cortadora_laser_tree_view" model="ir.ui.view">
+            <field name="name">dtm.cortadora.laser.tree</field>
+            <field name="model">dtm.cortadora.laser</field>
+            <field name="arch" type="xml">
+                <tree string="ModelTitle" >
+                    <field name="nombre"/>
+                    <field name="lamina"/>
+                    <field name="cortadora"/>
+                    <field name="cantidad"/>
+                    <button type="object" name="action_inicio" icon="fa-play" title="plus" class="btn btn-success" attrs="{'invisible':['|',('start','=',True),('cortado','=',True)]}" />
+                    <button type="object" name="action_stop" icon="fa-stop" title="plus" class="btn btn-warning" attrs="{'invisible':['|',('start','=',False),('cortado','=',True)]}"/>
+                    <field name="contador" />
+                    <button type="object" name="action_mas" icon="fa-chevron-up" title="plus" class="btn btn-primary" attrs="{'invisible':['|',('cortado','=',True),('start','!=',True)]}"/>
+                    <button type="object" name="action_menos" icon="fa-chevron-down" title="plus" class="btn btn-primary" attrs="{'invisible':[('permiso','!=',True)]}"/>
+                    <field name="status_bar" widget="progressbar"/>
+                    <field name="tiempo_teorico" />
+                    <field name="tiempo_total" />
+                    <field name="priority" widget="priority"/>
+                    <field name="cortado" invisible="1" />
+                    <field name="start" invisible="1"/>
+                    <field name="usuario" invisible="1"/>
+                    <field name="permiso" invisible="1"/>
+
+
+
+                </tree>
+            </field>
+        </record>
+
+<!--        <record id="ModelName_search_view" model="ir.ui.view">-->
+<!--            <field name="name">ProjectName.ModelName.search</field>-->
+<!--            <field name="model">ProjectName.ModelName</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search string="ModelTitle">-->
+<!--                    <group expand="1" string="Group By">-->
+<!--                        <filter string="Example Field" name="example_field" domain="[]"-->
+<!--                                context="{'group_by':'example_field'}"/>-->
+<!--                    </group>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="dtm_cortadora_laser_act_window" model="ir.actions.act_window">
+            <field name="name">Corte Laser</field>
+            <field name="res_model">dtm.cortadora.laser</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+<!--        <menuitem id="dtm_cortadora_laser__menu" action="dtm_cortadora_laser_act_window"/>-->
+
+    </data>
+</odoo>
