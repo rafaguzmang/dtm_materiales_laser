@@ -7,8 +7,9 @@ class CortadoraLaser(models.Model):
     _name = "dtm.cortadora.laser"
     _description = "Modelo para visualizar las ordenes diarias"
     _rec_name = "nombre"
-    _order = 'fecha_corte asc, priority desc'
+    _order = 'fecha_corte desc, priority desc'
 
+    orden_trabajo = fields.Integer(string='Orden')
     documentos = fields.Binary()
     nombre = fields.Char()
     lamina = fields.Char(string='Lámina',readonly=True)
@@ -114,6 +115,7 @@ class CortadoraLaser(models.Model):
         for nesteo in get_cortes:
             get_self = self.env['dtm.cortadora.laser'].search([('nombre','=',nesteo.nombre)],limit=1)
             vals = {
+                        'orden_trabajo':nesteo.model_id.orden_trabajo,
                         'documentos': nesteo.documentos,
                         'nombre': nesteo.nombre,
                         'lamina': nesteo.lamina,
