@@ -113,18 +113,29 @@ class CortadoraLaser(models.Model):
 
         get_cortes = self.env['dtm.documentos.cortadora'].search([('fecha_corte','!=',False),('cortado','!=',True)],order='create_date desc, priority desc')
         for nesteo in get_cortes:
-            get_self = self.env['dtm.cortadora.laser'].search([('nombre','=',nesteo.nombre)],limit=1)
-            vals = {
-                        'orden_trabajo':nesteo.model_id.orden_trabajo,
-                        'documentos': nesteo.documentos,
-                        'nombre': nesteo.nombre,
-                        'lamina': nesteo.lamina,
-                        'cantidad': nesteo.cantidad,
-                        'cortadora': nesteo.cortadora,
-                        'priority': nesteo.priority,
-                        'fecha_corte':nesteo.fecha_corte
-                    }
-            get_self.write(vals) if get_self else get_self.create(vals)
+            if nesteo.fecha_corte <= date.today():
+                get_self = self.env['dtm.cortadora.laser'].search([('nombre','=',nesteo.nombre)],limit=1)
+                vals = {
+                            'orden_trabajo':nesteo.model_id.orden_trabajo,
+                            'documentos': nesteo.documentos,
+                            'nombre': nesteo.nombre,
+                            'lamina': nesteo.lamina,
+                            'cantidad': nesteo.cantidad,
+                            'cortadora': nesteo.cortadora,
+                            'priority': nesteo.priority,
+                            'fecha_corte':nesteo.fecha_corte,
+                            'tiempo_teorico':nesteo.tiempo_teorico
+                        }
+                get_self.write(vals) if get_self else get_self.create(vals)
+
+        get_self = self.env['dtm.cortadora.laser'].search([])
+        for nesteo in get_self:
+            get_cortes = self.env['dtm.documentos.cortadora'].search([('model_id.orden_trabajo','=',nesteo.orden_trabajo),('nombre','=',nesteo.nombre)],limit=1)
+            if not get_cortes.fecha_corte:
+                nesteo.unlink()
+
+
+
 
         return res
 

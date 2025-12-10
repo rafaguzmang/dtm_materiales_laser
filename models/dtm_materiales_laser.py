@@ -19,13 +19,6 @@ class MaterialesLasser(models.Model):
     finalizado = fields.Boolean(compute='_compute_finalizado')
     status = fields.Float(string="Status", compute="_compute_status")
     tiempo_teorico = fields.Float(string="Tiempo Estimado", readonly = True,compute="_compute_tiempo_teorico")
-    priority = fields.Selection([
-        ('0', 'Muy baja'),
-        ('1', 'Baja'),
-        ('2', 'Media'),
-        ('3', 'Alta'),
-        ('4', 'Muy alta'),
-    ], string="Prioridad")
     usuario  = fields.Char()
     permiso = fields.Boolean(compute="_compute_permiso")
     # Campo para saber que orden está en corte

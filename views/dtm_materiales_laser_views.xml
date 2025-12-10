@@ -14,7 +14,6 @@
                     <field name="nombre_orden" />
                     <field name="primera_pieza" />
                     <field name="tiempo_teorico" />
-                    <field name="priority" widget="priority" attrs="{'readonly':[('permiso','!=',True)]}"/>
                     <field name="status" widget="progressbar"/>
                     <field name="usuario" invisible="1"/>
                     <field name="permiso" invisible="1"/>

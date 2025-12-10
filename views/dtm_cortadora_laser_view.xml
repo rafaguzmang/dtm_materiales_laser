@@ -34,13 +34,11 @@
                     <field name="tiempo_teorico" />
                     <field name="tiempo_total" />
                     <field name="priority" widget="priority"/>
+                    <field name="fecha_corte" />
                     <field name="cortado" invisible="1" />
                     <field name="start" invisible="1"/>
                     <field name="usuario" invisible="1"/>
                     <field name="permiso" invisible="1"/>
-
-
-
                 </tree>
             </field>
         </record>
