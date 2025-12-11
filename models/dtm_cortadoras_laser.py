@@ -83,9 +83,10 @@ class CortadoraLaser(models.Model):
         self.status = 'Pausado'
 
     def action_mas(self):
-        get_laser = self.env['dtm.documentos.cortadora'].search([('nombre', '=', self.nombre)], limit=1)
+        get_padre = self.env['dtm.materiales.laser'].search([('orden_trabajo','=',self.orden_trabajo)],limit=1)
+        get_laser = self.env['dtm.documentos.cortadora'].search([('nombre', '=', self.nombre),('model_id','=',get_padre.id)], limit=1)
         self.contador += 1
-        get_laser.write({'contador':1})
+        get_laser.write({'contador':self.contador})
         if self.contador >= self.cantidad:
             self.contador = self.cantidad
             self.cortado = True

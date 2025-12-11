@@ -18,7 +18,6 @@
                     <field name="usuario" invisible="1"/>
                     <field name="permiso" invisible="1"/>
                     <field name="en_corte" invisible="1"/>
-
                 </tree>
             </field>
         </record>
