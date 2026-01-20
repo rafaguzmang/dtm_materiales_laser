@@ -40,6 +40,16 @@ class CortadoraLaser(models.Model):
     permiso = fields.Boolean(compute="_compute_permiso")
     fecha_corte = fields.Date()
 
+    def write(self,vals):
+
+        res = super(CortadoraLaser,self).write(vals)
+        self.env['bus.bus']._sendone(
+            'canal_corte',  # Nombre del canal
+            'corte_laser',
+            {'mensaje': 'Actualiza Corte Laser'}  # json con la información
+        )
+        return res
+
     def _compute_tiempo_total(self):
         for record in self:
             get_laser = self.env['dtm.documentos.cortadora'].search([('nombre','=',record.nombre)],limit=1)
@@ -122,6 +132,7 @@ class CortadoraLaser(models.Model):
                             'nombre': nesteo.nombre,
                             'lamina': nesteo.lamina,
                             'cantidad': nesteo.cantidad,
+                            'contador':nesteo.contador,
                             'cortadora': nesteo.cortadora,
                             'priority': nesteo.priority,
                             'fecha_corte':nesteo.fecha_corte,
