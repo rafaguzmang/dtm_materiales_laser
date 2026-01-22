@@ -24,6 +24,16 @@ class MaterialesLasser(models.Model):
     # Campo para saber que orden está en corte
     en_corte = fields.Boolean()
 
+    def write(self, vals):
+
+        res = super(MaterialesLasser, self).write(vals)
+        self.env['bus.bus']._sendone(
+            'canal_corte',  # Nombre del canal
+            'corte_laser',
+            {'mensaje': 'Actualiza Corte Laser'}  # json con la información
+        )
+        return res
+
     def _compute_tiempo_teorico(self):
         for record in self:
             record.tiempo_teorico = sum(record.cortadora_id.mapped("tiempo_teorico"))
@@ -162,10 +172,6 @@ class MaterialesLasser(models.Model):
             # Borra ordenes vacías
             if not record.cortadora_id:
                 record.unlink()
-
-
-
-
         return res
 
 class Realizados(models.Model): #--------------Muestra los trabajos ya realizados---------------------
@@ -217,12 +223,7 @@ class Documentos(models.Model):
     usuario = fields.Char()
     permiso = fields.Boolean(compute="_compute_permiso")
 
-    # @api.onchange('fecha_corte')
-    # def _onchange_fecha_corte(self):
-    #     print(self.fecha_corte)
-    #     print(self.model_id._origin.id)
-    #     self.env['dtm.materiales.laser'].browse(self.model_id._origin.id).write()
-    #     # self.write({'fecha_corte':self.fecha_corte})
+
 
     def write(self,vals):
         res = super().write(vals)
