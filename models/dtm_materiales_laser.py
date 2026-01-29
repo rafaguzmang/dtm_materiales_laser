@@ -25,7 +25,6 @@ class MaterialesLasser(models.Model):
     en_corte = fields.Boolean()
 
     def write(self, vals):
-
         res = super(MaterialesLasser, self).write(vals)
         self.env['bus.bus']._sendone(
             'canal_corte',  # Nombre del canal
@@ -42,7 +41,7 @@ class MaterialesLasser(models.Model):
         for record in self:
             record.usuario = self.env.user.partner_id.email
             record.permiso = False
-            if record.usuario in ["rafaguzmang@hotmail.com","calidad2@dtmindustry.com"]:
+            if record.usuario in ["rafaguzmang@hotmail.com","ingenieria1@dtmindustry.com"]:
                 record.permiso = True
 
     def _compute_status(self):
