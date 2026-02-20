@@ -1,0 +1,92 @@
+<template id="maquina_cama_jfy" xml:space="preserve">
+    <t t-name="dtm_materiales_laser.maquina_cama_jfy" owl="1">
+        <div class="laser-app">
+            <div class="container">
+                <div class="header">
+                    <h1>JFY</h1>
+                </div>
+
+                <div class="tabla-control">
+                    <CorteLaser material="addMaterial" reloadFlag="state.reloadFlag" />                    
+                </div>
+
+                
+                <div class="input-section">
+                    <div class="input-group">
+                        <input 
+                            type="number" 
+                            id="materialCode" 
+                            placeholder="Ingrese código de lámina"
+                            t-ref="materialInput"
+                            t-on-keydown="onKeyDown"
+                        />
+                        <button t-on-click="addMaterial">➕ Agregar Lámina</button>
+                    </div>
+                </div>
+
+                <div class="laser-bed">
+                    <div class="bed-title">Cama de Corte</div>
+                    <div class="grid-container">
+                        <t t-foreach="state.materials" t-as="material" t-key="material_index">
+                            <div class="grid-cell" t-att-class="{'occupied': material, 'empty': !material}">
+                                <t t-if="material">
+                                    <div class="material-content">
+                                        <div class="ficha-tecnica">
+                                            <div class="ficha-header">
+                                                <div class="material-code"><t t-esc="material.codigo"/></div>
+                                                <div class="material-code"><t t-esc="material.cantidad"/></div>
+                                                <div class="material-code"><t t-esc="material.contador"/></div>
+                                                <button class="remove-btn" t-on-click="() => this.removeMaterial(material_index)">×</button>
+                                            </div>
+                                            
+                                            <div class="ficha-info">
+                                                <div class="info-row">
+                                                    <div class="info-label">Material:</div>
+                                                    <div class="info-value"><t t-esc="material.nombre"/></div>
+                                                </div>
+                                                <div class="info-row">
+                                                    <div class="info-label">Medida:</div>
+                                                    <div class="info-value"><t t-esc="material.medida"/></div>
+                                                </div>
+                                                <div class="info-row">
+                                                    <div class="info-label">Orden:</div>
+                                                    <div class="info-value"><t t-esc="material.orden"/></div>
+                                                </div>
+                                                <div class="info-row">
+                                                    <div class="info-label">Archivo:</div>
+                                                    <div class="info-value"><t t-esc="material.archivo"/></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Botones de control -->
+                                            <div class="control-buttons-cell">
+                                                <t t-if="!this.state.materials[material_index].play">
+                                                    <button class="btn-cell btn-play" t-on-click="() => this.startCutting(material_index)">
+                                                        ▶
+                                                    </button>
+                                                </t>
+                                                <t t-if="this.state.materials[material_index].play">
+                                                    <button class="btn-cell btn-stop" t-on-click="() => this.stopCutting(material_index)">
+                                                        ⏸
+                                                    </button>
+                                                </t>
+                                                <t t-if="this.state.materials[material_index].play">
+                                                    <button class="btn-cell btn-add" t-on-click="() => this.addContador(material_index)">
+                                                       ➕
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="empty-placeholder">Libre</div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>              
+            </div>
+        </div>
+    </t>
+</template>

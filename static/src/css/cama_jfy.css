@@ -1,0 +1,357 @@
+.laser-app * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.laser-app {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.laser-app .container {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 900px;
+    width: 100%;
+}
+
+.laser-app .header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.laser-app .header h1 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.laser-app .header p {
+    color: #666;
+    font-size: 14px;
+}
+
+.laser-app .input-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.laser-app .input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.laser-app .input-group input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.laser-app .input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.laser-app .input-group button {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.laser-app .input-group button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.laser-app .input-group button:active {
+    transform: translateY(0);
+}
+
+.laser-app .laser-bed {
+    background: #2c3e50;
+    border: 4px solid #34495e;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.laser-app .bed-title {
+    color: #ecf0f1;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.laser-app .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    background: #34495e;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.laser-app .grid-cell {
+    aspect-ratio: 1;
+    background: #ecf0f1;
+    border: 2px dashed #95a5a6;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+    min-height: 180px;
+}
+
+.laser-app .grid-cell.empty {
+    background: #bdc3c7;
+    opacity: 0.5;
+}
+
+.laser-app .grid-cell.occupied {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    border: 2px solid #2980b9;
+    color: white;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.laser-app .empty-placeholder {
+    color: #7f8c8d;
+    font-size: 14px;
+    text-align: center;
+}
+
+.laser-app .stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.laser-app .stat-item {
+    text-align: center;
+}
+
+.laser-app .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.laser-app .stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .laser-app .grid-container {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .laser-app .grid-cell {
+        min-height: 150px;
+        padding: 8px;
+    }
+}
+
+/*---------------------------------estilos para la ficha tecnica --------------------------------*/
+
+.material-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+.ficha-tecnica {
+    color: white;
+    font-size: 0.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ficha-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    gap: 6px;
+}
+
+.material-code {
+    font-size: 1.2rem;
+    font-weight: 700;
+    word-wrap: break-word;
+    flex: 1;
+    line-height: 1.1;
+}
+
+.ficha-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 6px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    opacity: 0.85;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.info-value {
+    font-weight: 400;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.15;
+    font-size: 0.7rem;
+}
+
+/* Botones de control */
+.control-buttons-cell {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.btn-cell {
+    flex: 1;
+    max-width: 65px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cell.btn-play {
+    background: rgba(39, 174, 96, 0.9);
+}
+
+.btn-cell.btn-play:hover {
+    background: #27ae60;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-cell.btn-stop {
+    background: rgba(231, 76, 60, 0.9);
+}
+
+.btn-cell.btn-stop:hover {
+    background: #e74c3c;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-cell.btn-add {
+    background: rgba(46, 204, 113, 0.9);
+    color: white;
+}
+
+.btn-cell.btn-add:hover {
+    background: #2ecc71;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-cell:active {
+    transform: translateY(0);
+}
+
+/* Botón de cerrar (X) */
+.remove-btn {
+    background: rgba(231, 76, 60, 0.95);
+    color: white;
+    border: 2px solid white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.remove-btn:hover {
+    background: #c0392b;
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}

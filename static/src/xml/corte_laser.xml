@@ -1,0 +1,81 @@
+<template xml:space="preserve">
+    <t t-name="dtm_materiales_laser.corte_laser_view" owl="1">
+        <div class="cortadora-laser-container">
+       
+
+        <!-- Tabla -->
+        <div class="table-wrapper">
+            <table class="laser-table">
+                <thead>
+                    <tr>
+                        <th class="col-orden">Orden</th>
+                        <th class="col-nombre">Nombre</th>
+                        <th class="col-lamina">Lámina</th>
+                        <th class="col-cortadora">Cortadora</th>
+                        <th class="col-cantidad">Cantidad</th>
+                        <th class="col-acciones">Acciones</th>
+                        <th class="col-contador">Contador</th>
+                        <th class="col-progreso">Progreso</th>
+                        <th class="col-tiempo">T. Teórico</th>
+                        <th class="col-tiempo">T. Total</th>
+                        <th class="col-prioridad">Prioridad</th>
+                        <th class="col-fecha">Fecha Corte</th>
+                        <th class="col-estado">Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <!-- Los datos se cargarán aquí dinámicamente -->
+                    <t t-foreach="state.trabajos" t-as="trabajo" t-key="trabajo.id">
+                        <tr >
+                            <td class="col-orden"><t t-esc="trabajo.orden_trabajo" /></td>
+                            <td class="col-nombre" t-on-click="() => this.openPDF(trabajo)"><t t-esc="trabajo.nombre" /></td>
+                            <td class="col-lamina"><t t-esc="trabajo.lamina" /></td>
+                            <td class="col-cortadora"><t t-esc="trabajo.cortadora" /></td>
+                            <td class="col-cantidad"><t t-esc="trabajo.cantidad" /></td>
+                            <td class="col-acciones">
+                                <button class="btn btn-primary" t-on-click="() => this.playAgregar(trabajo.lamina, trabajo.nombre)">Agregar</button>                                
+                            </td>
+                            <td class="col-contador"><t t-esc="trabajo.contador" /></td>
+                            <td class="col-progreso"></td>
+                            <td class="col-tiempo"><t t-esc="trabajo.tiempo_teorico" /></td>
+                            <td class="col-tiempo"></td>
+                            <td class="col-prioridad"><t t-esc="trabajo.priority" /></td>
+                            <td class="col-fecha"><t t-esc="trabajo.fecha_corte" /></td>
+                            <td class="col-estado"></td>
+                        </tr>
+                    </t>
+            
+                    <t t-if="state.showPDF">
+                        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><t t-esc="state.pdfTitle"/></h5>
+                                    <button type="button" class="btn-close" aria-label="Close" t-on-click="closePDF"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <iframe 
+                                        t-att-src="'data:application/pdf;base64,' + state.currentPDF"
+                                        class="pdf-iframe"
+                                        type="application/pdf">
+                                    </iframe>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" t-on-click="closePDF">Cerrar</button> 
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loading" style="display: none;">
+            <i class="fa fa-spinner fa-spin"></i>
+            <p>Cargando trabajos...</p>
+        </div>
+    </div>
+    </t>
+</template>

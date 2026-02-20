@@ -1,0 +1,489 @@
+/* Reset y configuración básica */
+
+/* Contenedor principal */
+.cortadora-laser-container {
+    padding: 24px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Header */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a202c;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.table-title i {
+    color: #3b82f6;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.record-count {
+    font-size: 14px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.record-count strong {
+    color: #1a202c;
+    font-size: 18px;
+}
+
+.btn-refresh {
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Tabla */
+.table-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+}
+
+.laser-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.laser-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.laser-table thead th {
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.laser-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.laser-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.laser-table tbody td {
+    padding: 16px 12px;
+    vertical-align: middle;
+}
+
+/* Estados de fila */
+.table-row.status-completed {
+    background: #f0fdf4;
+}
+
+.table-row.status-in-progress {
+    background: #fffbeb;
+}
+
+.table-row.status-pending {
+    background: white;
+}
+
+/* Badges */
+.orden-badge,
+.cortadora-badge,
+.cantidad-badge,
+.tiempo-badge,
+.fecha-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.orden-badge {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.cortadora-badge {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.cantidad-badge {
+    background: #f3e8ff;
+    color: #7c3aed;
+    font-size: 16px;
+}
+
+.tiempo-badge {
+    background: #fef3c7;
+    color: #92400e;
+    font-family: 'Courier New', monospace;
+}
+
+.tiempo-badge.tiempo-total {
+    background: #fed7aa;
+    color: #9a3412;
+}
+
+.fecha-badge {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/* Status badge */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.status-completed {
+    background: #10b981;
+    color: white;
+}
+
+.status-badge.status-in-progress {
+    background: #f59e0b;
+    color: white;
+}
+
+.status-badge.status-pending {
+    background: #94a3b8;
+    color: white;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-action {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.btn-start {
+    background: #10b981;
+    color: white;
+}
+
+.btn-start:hover {
+    background: #059669;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-stop {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-stop:hover {
+    background: #d97706;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Control de contador */
+.contador-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.contador-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+    min-width: 40px;
+    text-align: center;
+}
+
+.btn-counter {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #3b82f6;
+    background: white;
+    color: #3b82f6;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-counter:hover {
+    background: #3b82f6;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Barra de progreso */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.progress-bar-wrapper {
+    flex: 1;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 100px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    transition: width 0.3s ease;
+    border-radius: 12px;
+}
+
+.progress-text {
+    font-weight: 700;
+    color: #1a202c;
+    min-width: 45px;
+    text-align: right;
+}
+
+/* Estrellas de prioridad */
+.priority-stars {
+    color: #fbbf24;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+/* Anchos de columnas */
+.col-orden {
+    width: 80px;
+}
+
+.col-nombre {
+    min-width: 150px;
+}
+
+.col-lamina {
+    width: 100px;
+}
+
+.col-cortadora {
+    width: 120px;
+}
+
+.col-cantidad {
+    width: 80px;
+    text-align: center;
+}
+
+.col-acciones {
+    width: 100px;
+    text-align: center;
+}
+
+.col-contador {
+    width: 140px;
+}
+
+.col-progreso {
+    width: 180px;
+}
+
+.col-tiempo {
+    width: 100px;
+}
+
+.col-prioridad {
+    width: 100px;
+    text-align: center;
+}
+
+.col-fecha {
+    width: 120px;
+}
+
+.col-estado {
+    width: 120px;
+    text-align: center;
+}
+
+/* Estado vacío */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+}
+
+.empty-state i {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 18px;
+}
+
+/* Estado de carga */
+.loading-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.loading-state i {
+    font-size: 48px;
+    color: #3b82f6;
+    margin-bottom: 16px;
+}
+
+.loading-state p {
+    font-size: 16px;
+    color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .header-section {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .laser-table {
+        font-size: 13px;
+    }
+
+    .laser-table thead th,
+    .laser-table tbody td {
+        padding: 12px 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cortadora-laser-container {
+        padding: 12px;
+    }
+
+    .header-section {
+        padding: 16px;
+    }
+
+    .table-title {
+        font-size: 22px;
+    }
+}
+
+/* Estilos para el modal de PDF */
+/* Que el modal ocupe casi toda la pantalla */
+.modal-dialog.modal-xl {
+    max-width: 95vw;
+    height: 95vh;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* Que el contenido del modal ocupe el alto del dialog */
+.modal-dialog.modal-xl .modal-content {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Que el body crezca y ocupe el espacio restante */
+.modal-dialog.modal-xl .modal-body {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Que el iframe llene todo el modal-body */
+.modal-dialog.modal-xl .modal-body .pdf-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+.modal-dialog.modal-xl .modal-header {
+    padding: 0.5rem 1rem;
+    min-height: unset;
+    flex-shrink: 0;
+    /* Importante: evita que el header se comprima */
+}
+
+.modal-dialog.modal-xl .modal-header .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.modal-dialog.modal-xl .modal-content {
+    position: relative;
+    /* Necesario para el absolute del btn-close */
+}

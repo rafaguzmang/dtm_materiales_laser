@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="dtm_materiales_laser.maquina_cama_jfy" model="ir.actions.client">
+            <field name="name">Cama JFY</field>
+            <field name="tag">dtm_materiales_laser.maquina_cama_jfy</field>
+        </record>
+        <menuitem id="dtm_materiales_laser.maquina_cama_jfy_menu" action="dtm_materiales_laser.maquina_cama_jfy"/> 
+    </data>
+</odoo>
