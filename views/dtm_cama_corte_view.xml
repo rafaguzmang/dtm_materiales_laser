@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="dtm_cama_corte_tree_view" model="ir.ui.view">
+            <field name="name">dtm.cama.corte.tree</field>
+            <field name="model">dtm.cama.corte</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="codigo"/>
+                    <field name="maquina"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dtm_cama_corte_act_window" model="ir.actions.act_window">
+            <field name="name">Cama de Corte</field>
+            <field name="res_model">dtm.cama.corte</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="dtm_cama_corte_menu" action="dtm_cama_corte_act_window"/>
+
+    </data>
+</odoo>

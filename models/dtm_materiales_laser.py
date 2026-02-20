@@ -311,6 +311,7 @@ class Tiempos(models.Model):
 
     contador = fields.Integer(string='Número de láminas', readonly=True)
     tiempo = fields.Float(string='Duración', readonly=True)
+    codigo = fields.Integer(string='Codigo', readonly=True)
 
 
 

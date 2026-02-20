@@ -12,7 +12,19 @@
         'views/dtm_laser_realizados_view.xml',
         'views/menu_item.xml',
         'views/dtm_cortadora_laser_view.xml',
+        'views/dtm_owl_views.xml',
+        'views/dtm_cama_corte_view.xml'
     ],
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'dtm_materiales_laser/static/src/js/cama_jfy.js',
+            'dtm_materiales_laser/static/src/xml/cama_jfy.xml',
+            'dtm_materiales_laser/static/src/css/cama_jfy.css',
+            'dtm_materiales_laser/static/src/css/corte_laser.css',
+            'dtm_materiales_laser/static/src/js/corte_laser.js',
+            'dtm_materiales_laser/static/src/xml/corte_laser.xml',
+        ],
+    },
 }
 

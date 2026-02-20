@@ -150,10 +150,6 @@ class CortadoraLaser(models.Model):
             get_cortes = self.env['dtm.documentos.cortadora'].search([('model_id.orden_trabajo','=',nesteo.orden_trabajo),('nombre','=',nesteo.nombre)],limit=1)
             if not get_cortes.fecha_corte:
                 nesteo.unlink()
-
-
-
-
         return res
 
 
