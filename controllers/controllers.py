@@ -1,3 +1,4 @@
+from ast import Nonlocal
 from odoo import http
 from odoo.http import request
 from datetime import datetime
@@ -105,6 +106,9 @@ class MaterialesLaserController(http.Controller):
                 'play': True,
                 'tiempo_start': datetime.now(),
             })
+            #Pone play en dtm.cortadora.laser para poder identificar en el dashboard con que corte se está trabajando
+            get_inicio = request.env['dtm.cortadora.laser'].sudo().search([('orden_trabajo','=',int(get_cama_corte.orden)),('nombre','=',get_cama_corte.archivo)],limit=1)
+            get_inicio.write({'start':True,'status':'En Proceso'}) if get_inicio else None
             return {'success': True}
         return {'error': 'No se encontro el material'}
 
@@ -121,19 +125,22 @@ class MaterialesLaserController(http.Controller):
                 'play': False,
                 'tiempo': round((datetime.today() - get_cama_corte.tiempo_start).total_seconds() / 60.0, 4),
                 })
-            get_model_id = request.env['dtm.materiales.laser'].sudo().search([('orden_trabajo','=',get_cama_corte.orden)],limit=1)
-            get_laser = request.env['dtm.documentos.cortadora'].sudo().search([('model_id','=',get_model_id.id),('nombre','=',get_cama_corte.archivo)],limit=1)
-            if get_laser:
-                # Pone el tiempo de corte entre un play y un stop
-                get_laser.tiempos_id.create({
-                    'model_id': get_laser.id,
-                    'tiempo': round((datetime.today() - get_cama_corte.tiempo_start).total_seconds() / 60.0, 4)
-                })
-            else:
-                request.env['dtm.documentos.tiempos'].sudo().create({
-                    'codigo':codigo,
-                    'tiempo': round((datetime.today() - get_cama_corte.tiempo_start).total_seconds() / 60.0, 4)
-                })
+            #Pone stop en dtm.cortadora.laser para poder identificar en el dashboard con que corte se está trabajando
+            get_inicio = request.env['dtm.cortadora.laser'].sudo().search([('orden_trabajo','=',int(get_cama_corte.orden)),('nombre','=',get_cama_corte.archivo)],limit=1)
+            get_inicio.write({'start':False,'status':''}) if get_inicio else None
+            if get_inicio:
+                get_laser = request.env['dtm.documentos.cortadora'].sudo().search([('model_id','=',get_inicio.id),('nombre','=',get_cama_corte.archivo)],limit=1)
+                if get_laser:
+                    # Pone el tiempo de corte entre un play y un stop
+                    get_laser.tiempos_id.create({
+                        'model_id': get_laser.id,
+                        'tiempo': round((datetime.today() - get_cama_corte.tiempo_start).total_seconds() / 60.0, 4)
+                    })
+                else:
+                    request.env['dtm.documentos.tiempos'].sudo().create({
+                        'codigo':codigo,
+                        'tiempo': round((datetime.today() - get_cama_corte.tiempo_start).total_seconds() / 60.0, 4)
+                    })
             return {'success': True}
         return {'error': 'No se encontro el material'}
     # Endpoint para agregar un material cortado
@@ -150,17 +157,18 @@ class MaterialesLaserController(http.Controller):
        
         #Busca dentro del modelo donde están los cortes a realizarse
         get_cama_corte = request.env['dtm.cama.corte'].sudo().search([('codigo', '=', codigo), ('index', '=', index), ('maquina', '=', maquina)], limit=1)
-        if get_cama_corte.contador + 1 >= get_cama_corte.cantidad:
+        # Busca el id del orden de trabajo - Se mueve fuera de los bloques condicionales para evitar UnboundLocalError
+        get_model_id = request.env['dtm.materiales.laser'].sudo().search([('orden_trabajo','=',get_cama_corte.orden)],limit=1) if get_cama_corte else None
+
+        if get_cama_corte and get_cama_corte.contador + 1 >= get_cama_corte.cantidad:
             #Indica a almacen las láminas que ya fueron cortadas
             request.env['dtm.control.laminas'].sudo().create({'lamina':f"{codigo} - {nombre}","cantidad":cantidad if cantidad else 1})
             get_cama_corte.write({
                 'play': False,
                 'cortado': True,
                 })
-            # Busca el id del orden de trabajo
-            get_model_id = request.env['dtm.materiales.laser'].sudo().search([('orden_trabajo','=',get_cama_corte.orden)],limit=1)
             # Busca el corte en el programa de corte
-            get_laser = request.env['dtm.documentos.cortadora'].sudo().search([('model_id','=',get_model_id.id),('nombre','=',get_cama_corte.archivo)],limit=1)            
+            get_laser = request.env['dtm.documentos.cortadora'].sudo().search([('model_id','=',get_model_id.id),('nombre','=',get_cama_corte.archivo)],limit=1) if get_model_id else None
             if get_laser:
                 get_laser.write({
                     'contador':get_laser.contador + 1,
@@ -189,6 +197,11 @@ class MaterialesLaserController(http.Controller):
             get_cama_corte.write({
                 'contador': get_cama_corte.contador + 1,
             })
+            get_programa = request.env['dtm.cortadora.laser'].sudo().search([('orden_trabajo','=',get_cama_corte.orden),('nombre','=',get_cama_corte.archivo),('lamina','ilike',codigo),('cortadora','=',cortadora)],limit=1)
+            get_programa.write({'contador':get_programa.contador + 1,'status':'En Proceso','porcentaje':round((get_programa.contador / get_programa.cantidad) * 100, 2)}) if get_programa else None
+            get_laser = request.env['dtm.documentos.cortadora'].sudo().search([('model_id','=',get_model_id.id),('nombre','=',get_cama_corte.archivo)],limit=1) if get_model_id else None
+            get_laser.write({'contador':get_laser.contador + 1,'status':'En Proceso','porcentaje':round((get_laser.contador / get_laser.cantidad) * 100, 2)}) if get_laser else None
+
             return {'success': True}
         return {'error': 'No se encontro el material'}
     # Obtiene los cortes programados del día
