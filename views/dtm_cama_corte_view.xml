@@ -2,7 +2,6 @@
 <odoo>
     <data>
 
-
         <record id="dtm_cama_corte_tree_view" model="ir.ui.view">
             <field name="name">dtm.cama.corte.tree</field>
             <field name="model">dtm.cama.corte</field>

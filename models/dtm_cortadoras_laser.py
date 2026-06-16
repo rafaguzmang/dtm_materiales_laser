@@ -93,9 +93,8 @@ class CortadoraLaser(models.Model):
         self.status = 'Pausado'
 
         # Pasa la información a la tabla con las láminas cortadas
-        if self.contador > 0:
-            control = self.env['dtm.control.laminas'].search([('lamina','=',self.lamina)])
-            control.write({'lamina':self.lamina}) if control else self.env['dtm.control.laminas'].sudo().create({'lamina':self.lamina})
+        if self.contador > 0:            
+            self.env['dtm.control.laminas'].sudo().create({'lamina':self.lamina,'orden_trabajo':self.orden_trabajo if self.orden_trabajo else 'Sin Orden','cantidad':1})
 
     def action_mas(self):
         get_padre = self.env['dtm.materiales.laser'].search([('orden_trabajo','=',self.orden_trabajo)],limit=1)

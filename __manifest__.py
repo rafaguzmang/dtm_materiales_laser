@@ -4,10 +4,11 @@
     'version': '1.0',
     'author': "Rafael Guzmán",
     "description": "Conteo de materiales de salida",
-    "data":[        
+    "data":[     
+        # Security   
+        'security/res_group.xml',
         'security/ir.model.access.csv',
-        # 'security/res_group.xml',
-        # 'security/model_access.xml',
+        # Views   
         'views/dtm_materiales_laser_views.xml',
         'views/dtm_laser_realizados_view.xml',
         'views/menu_item.xml',
