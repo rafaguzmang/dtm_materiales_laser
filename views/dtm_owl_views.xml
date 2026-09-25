@@ -5,6 +5,6 @@
             <field name="name">Cama JFY</field>
             <field name="tag">dtm_materiales_laser.maquina_cama_jfy</field>
         </record>
-        <menuitem id="dtm_materiales_laser.maquina_cama_jfy_menu" action="dtm_materiales_laser.maquina_cama_jfy"/> 
+        <!-- <menuitem id="dtm_materiales_laser.maquina_cama_jfy_menu" action="dtm_materiales_laser.maquina_cama_jfy"/>  -->
     </data>
 </odoo>

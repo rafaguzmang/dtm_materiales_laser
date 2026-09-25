@@ -125,11 +125,12 @@ class CortadoraLaser(models.Model):
 
     def get_view(self, view_id=None, view_type='form', **options):
         res = super(CortadoraLaser, self).get_view(view_id, view_type, **options)
-
-        get_cortes = self.env['dtm.documentos.cortadora'].search([('fecha_corte','!=',False),('cortado','!=',True)],order='create_date desc, priority desc')
+        get_null = self.env['dtm.documentos.cortadora'].search([('model_id','=',False)])
+        get_null.unlink()
+        get_cortes = self.env['dtm.documentos.cortadora'].search([('fecha_corte','!=',False),('cortado','!=',True),('model_id','!=',False)],order='create_date desc, priority desc')
         for nesteo in get_cortes:
             if nesteo.fecha_corte <= date.today():
-                get_self = self.env['dtm.cortadora.laser'].search([('nombre','=',nesteo.nombre)],limit=1)
+                get_self = self.env['dtm.cortadora.laser'].search([('nombre','=',nesteo.nombre),('orden_trabajo','=',nesteo.model_id.orden_trabajo)],limit=1)
                 vals = {
                             'orden_trabajo':nesteo.model_id.orden_trabajo,
                             'documentos': nesteo.documentos,
@@ -142,7 +143,11 @@ class CortadoraLaser(models.Model):
                             'fecha_corte':nesteo.fecha_corte,
                             'tiempo_teorico':nesteo.tiempo_teorico
                         }
-                get_self.write(vals) if get_self else get_self.create(vals)
+                if get_self:
+                    get_self.write(vals)     
+                else:
+                    get_self = self.env['dtm.cortadora.laser'].create(vals)
+                    print(get_self)
 
         get_self = self.env['dtm.cortadora.laser'].search([])
         for nesteo in get_self:

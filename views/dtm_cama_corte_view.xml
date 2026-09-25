@@ -19,7 +19,7 @@
             <field name="view_mode">tree</field>
         </record>
 
-        <menuitem id="dtm_cama_corte_menu" action="dtm_cama_corte_act_window"/>
+        <!-- <menuitem id="dtm_cama_corte_menu" action="dtm_cama_corte_act_window"/> -->
 
     </data>
 </odoo>
