@@ -40,6 +40,8 @@ class CortadoraLaser(models.Model):
     permiso = fields.Boolean(compute="_compute_permiso")
     fecha_corte = fields.Date()
 
+    material_no_autorizado = fields.Boolean(default=False) 
+
     def write(self,vals):
 
         res = super(CortadoraLaser,self).write(vals)

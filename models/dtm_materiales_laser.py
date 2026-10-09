@@ -23,6 +23,7 @@ class MaterialesLasser(models.Model):
     permiso = fields.Boolean(compute="_compute_permiso")
     # Campo para saber que orden está en corte
     en_corte = fields.Boolean()
+    material_no_autorizado = fields.Boolean(default=False) #Al estar en verdadero se pinta rojo para indicar revición
 
     def write(self, vals):
         res = super(MaterialesLasser, self).write(vals)
@@ -221,6 +222,7 @@ class Documentos(models.Model):
 
     usuario = fields.Char()
     permiso = fields.Boolean(compute="_compute_permiso")
+    material_no_autorizado = fields.Boolean(default=False) #Al estar en verdadero se pinta rojo para indicar revición
 
 
 

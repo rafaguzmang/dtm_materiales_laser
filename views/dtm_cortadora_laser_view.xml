@@ -19,7 +19,7 @@
             <field name="name">dtm.cortadora.laser.tree</field>
             <field name="model">dtm.cortadora.laser</field>
             <field name="arch" type="xml">
-                <tree string="ModelTitle" >
+                <tree string="ModelTitle" decoration-danger="material_no_autorizado" >
                     <field name="orden_trabajo"/>
                     <field name="nombre"/>
                     <field name="lamina"/>
@@ -39,6 +39,7 @@
                     <field name="start" invisible="1"/>
                     <field name="usuario" invisible="1"/>
                     <field name="permiso" invisible="1"/>
+                    <field name="material_no_autorizado" invisible="1"/>
                 </tree>
             </field>
         </record>
