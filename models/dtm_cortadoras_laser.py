@@ -55,7 +55,6 @@ class CortadoraLaser(models.Model):
     def _compute_tiempo_total(self):
         for record in self:
             get_laser = self.env['dtm.documentos.cortadora'].search([('nombre','=',record.nombre)],limit=1)
-            print(get_laser.tiempos_id)
             record.tiempo_total = sum(get_laser.tiempos_id.mapped('tiempo'))
 
     def _compute_permiso(self):
@@ -112,6 +111,16 @@ class CortadoraLaser(models.Model):
                 'cortado':self.cortado,
                 'status':self.status,
             })
+            get_proceso = self.env['dtm.proceso'].search([('ot_number', '=', str(self.orden_trabajo))], limit=1)
+            get_corte = self.env['dtm.materiales.laser'].search([('orden_trabajo', '=', self.orden_trabajo)], limit=1)
+            if get_corte.primera_pieza:
+                get_c = self.env['dtm.proceso.primer'].search([('model_id', '=', get_proceso.id), ('nombre', '=', self.nombre)])
+                if get_c:
+                    get_c.write({'cortado': 'Cortado'})
+            if get_corte.cortadora_id:
+                get_c = self.env['dtm.proceso.cortadora'].search([('model_id', '=', get_proceso.id), ('nombre', '=', self.nombre)])
+                if get_c:
+                    get_c.write({'cortado': 'Cortado'})
             self.action_stop()
             self.unlink()
 

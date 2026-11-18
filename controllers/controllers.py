@@ -220,7 +220,36 @@ class MaterialesLaserController(http.Controller):
                 'cortadora': corte.cortadora,  # Cortadora
                 'priority': corte.priority,  # Prioridad
                 'fecha_corte':corte.fecha_corte.strftime('%Y-%m-%d') if corte.fecha_corte else False,  # Fecha de corte
-                'tiempo_teorico':corte.tiempo_teorico  # T  iempo teórico
+                'tiempo_teorico':corte.tiempo_teorico,  # T  iempo teórico
+                'tiempo_real':corte.tiempo_real  # Tiempo real
+                
+            }
+            for corte in get_corte_laser
+        ]
+        
+        return (request.make_response(
+            json.dumps(result),
+            headers={
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        ))
+
+    @http.route('/cama_encorte_dialogo', type='http', auth='public', csrf=False)
+    def get_encorte_dialogo(self):
+        get_corte_laser = request.env['dtm.cortadora.laser'].sudo().search([])
+        result = [
+            {
+                'orden_trabajo':corte.orden_trabajo,  # Orden de trabajo
+                'archivo': corte.documentos.decode('utf-8') if corte.documentos else False,  # Documentos
+                'nombre': corte.nombre,  # Nombre
+                'material': corte.lamina,  # Lámina
+                'cantidad': corte.cantidad,  # Cantidad
+                'tiempo':corte.tiempo_teorico,  # Contador
+                'cortadora': corte.cortadora,  # Cortadora
+                'porcentaje': round(corte.status_bar,0),  # Prioridad
+                'tiempo_real': corte.tiempo_total, # Fecha de corte     
+                'play':corte.start,
             }
             for corte in get_corte_laser
         ]

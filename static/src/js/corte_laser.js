@@ -25,7 +25,6 @@ export class CorteLaser extends Component {
     }
 
     playAgregar(lamina, archivo) {
-        console.log("Lamina: ", lamina);
         this.props.material(lamina, archivo);
     }
 
@@ -35,11 +34,9 @@ export class CorteLaser extends Component {
         let index = 0;
         const trabajos = data.map(row => ({ id: index++, ...row }));
         this.state.trabajos = trabajos;
-        console.log("Trabajos: ", this.state.trabajos);
     }
 
     openPDF(trabajo) {
-        console.log("Trabajo: ", trabajo);
         this.state.currentPDF = trabajo.documentos; // El base64 del PDF
         this.state.pdfTitle = trabajo.nombre;
         this.state.showPDF = true;
